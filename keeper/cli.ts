@@ -240,6 +240,15 @@ async function cmdUpdatePolicy(args: string[]): Promise<void> {
   log("policy_updated", { target_id: targetId, tx_hash: txHash });
 }
 
+async function cmdResumeAll(args: string[]): Promise<void> {
+  const [targetId] = args;
+  if (!targetId) throw new Error("usage: resume-all <target_id>");
+  const client = getClient();
+  const { txHash, open } = await client.requestResumeAll(targetId);
+  trackPending(String(txHash), "resume-all");
+  log("resume_all_requested", { target_id: targetId, tx_hash: txHash, still_open: open });
+}
+
 async function cmdResume(args: string[]): Promise<void> {
   const [targetId, verdictKey] = args;
   if (!targetId || !verdictKey) throw new Error("usage: resume <target_id> <verdict_key>");
@@ -531,6 +540,8 @@ async function cmdWatch(args: string[]): Promise<void> {
           }
         }
       }
+      // deliver any decided PAUSE/RESUME whose appeal window has closed (no-op on Studionet)
+      try { await finalizePendingRound(); } catch (e) { log("finalize_round_error", { error: String(e) }); }
       log("poll_end", { target_id: targetId, seen_total: seen.size });
     } catch (e) {
       log("poll_error", { target_id: targetId, error: String(e) });
@@ -574,6 +585,8 @@ async function main(): Promise<void> {
       return cmdRegister(args);
     case "resume":
       return cmdResume(args);
+    case "resume-all":
+      return cmdResumeAll(args);
     case "finalize":
       return cmdFinalize(args);
     case "finalize-pending":
@@ -593,7 +606,7 @@ async function main(): Promise<void> {
         [
           "usage: keeper <command> [args]",
           "  update-manifest <target_id> <manifest.json>   update-policy <target_id> <policy.json>",
-          "  finalize <txId...>   finalize-pending [--until-empty] [--interval 300]",
+          "  resume-all <target_id>   finalize <txId...>   finalize-pending [--until-empty] [--interval 300]",
           "    (deliver on-finalization messages after the appeal window)",
           "",
           "  check <target_id> <source> <incident_id> [--wait-final]",

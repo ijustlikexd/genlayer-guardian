@@ -498,6 +498,66 @@ class Guardian(gl.Contract):
         return res["reason_code"]
 
 
+
+    @gl.public.view
+    def open_verdicts(self, target_id: str) -> list:
+        """Verdict keys for this target whose action is still in force (RESTRICT or PAUSE, not resumed)."""
+        return [k for k, v in self.verdicts.items()
+                if v.target_id == target_id and v.action in ("RESTRICT", "PAUSE") and not v.resumed]
+
+    @gl.public.write
+    def request_resume_all(self, target_id: str) -> dict:
+        """Owner asks to lift every open incident at once, typically after a manifest upgrade.
+        One non-deterministic block re-adjudicates all of them; RESUME is emitted per incident
+        that is withdrawn or no longer affects the current manifest. Denied ones are reported,
+        not reverted, so a partial recovery still lands."""
+        t = self._own_target(target_id)
+        keys = [k for k, v in self.verdicts.items()
+                if v.target_id == target_id and v.action in ("RESTRICT", "PAUSE") and not v.resumed]
+        if not keys:
+            raise gl.vm.UserError("Nothing to resume")
+        manifest = _parse_manifest(t.manifest_json)
+        deps = [dict(d) for d in manifest["dependencies"]]
+        source_repo = t.source_repo
+        items = sorted((k, self.verdicts[k].source, self.verdicts[k].incident_id) for k in keys)
+
+        def judge_one(source: str, incident_id: str) -> tuple:
+            try:
+                adv = _fetch_osv(incident_id, deps) if source == "osv" else _fetch_github_repo(source_repo, incident_id, deps)
+            except Exception:
+                return False, "SOURCE_ERROR"
+            if adv.get("insufficient") and adv["reason_code"] == "ADVISORY_WITHDRAWN":
+                return True, "ADVISORY_WITHDRAWN"
+            if adv.get("insufficient"):
+                return False, adv["reason_code"]
+            if not adv["applicable"]:
+                return True, "NO_LONGER_AFFECTED"
+            return False, "STILL_AFFECTED"
+
+        def leader_fn() -> list:
+            return [[k, *judge_one(src, inc)] for k, src, inc in items]
+
+        def validator_fn(leaders_res) -> bool:
+            if not isinstance(leaders_res, gl.vm.Return):
+                return False
+            mine = leader_fn()
+            theirs = leaders_res.calldata
+            return [(m[0], m[1], m[2]) for m in mine] == [(x[0], x[1], x[2]) for x in theirs]
+
+        res = gl.vm.run_nondet(leader_fn, validator_fn)
+        resumed, denied = [], {}
+        target = Target(t.address)
+        for key, ok, reason in res:
+            v = self.verdicts[key]
+            if ok:
+                target.emit(on="finalized").apply_action(v.incident_id, "RESUME")
+                v.resumed = True
+                resumed.append(v.incident_id)
+            else:
+                denied[v.incident_id] = reason
+        return {"resumed": resumed, "denied": denied}
+
+
 # ------------------------------------------------------------- source adapters
 # These run inside the non-deterministic block (leader and every validator).
 

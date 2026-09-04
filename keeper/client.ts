@@ -138,6 +138,8 @@ export interface GuardianClient {
 
   requestResume(targetId: string, verdictKey: string): Promise<{ reasonCode: string; txHash: string }>;
   finalize(txId: string): Promise<{ ok: boolean; evmTx?: string; error?: string }>;
+  requestResumeAll(targetId: string): Promise<{ txHash: string; open: string[] }>;
+  openVerdicts(targetId: string): Promise<string[]>;
   updateManifest(targetId: string, manifestJson: string): Promise<{ txHash: string }>;
   updatePolicy(targetId: string, policyJson: string): Promise<{ txHash: string }>;
 
@@ -391,6 +393,19 @@ export function createGuardianClient(options: CreateGuardianClientOptions): Guar
       } catch (err: any) {
         return { ok: false, error: String(err?.shortMessage ?? err?.message ?? err) };
       }
+    },
+
+    async openVerdicts(targetId: string): Promise<string[]> {
+      const r = await client.readContract({ address: requireAddress(), functionName: "open_verdicts", args: [targetId] });
+      return (r as unknown as string[]) ?? [];
+    },
+
+    async requestResumeAll(targetId: string): Promise<{ txHash: string; open: string[] }> {
+      // One transaction re-adjudicates every open incident; RESUME is emitted per incident that
+      // no longer applies. Remaining open verdicts are read back to report what was denied.
+      const { txHash } = await simpleWrite("request_resume_all", [targetId]);
+      const open = await this.openVerdicts(targetId);
+      return { txHash, open };
     },
 
     async updateManifest(targetId: string, manifestJson: string): Promise<{ txHash: string }> {

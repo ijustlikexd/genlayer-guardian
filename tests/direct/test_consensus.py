@@ -109,3 +109,61 @@ def test_resume_only_by_target_owner_and_only_for_actions(direct_vm, direct_depl
             c.request_resume("vault-a", key)
     with direct_vm.expect_revert("Unknown verdict"):
         c.request_resume("vault-a", "nope")
+
+
+# -------------------------------------------------------------- resume_all
+
+def test_resume_all_partial_and_idempotent(direct_vm, direct_deploy, direct_owner):
+    """Two open incidents; after upgrade one is no longer affected, one is withdrawn, a third still applies."""
+    c, cap = _setup(direct_deploy, direct_vm, direct_owner)
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0001")); mock_llm_prereq(direct_vm, True)
+    c.check("vault-a", "osv", "GHSA-demo-0001")                       # PAUSE
+    direct_vm.clear_mocks()
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0002", severity="MODERATE"))
+    c.check("vault-a", "osv", "GHSA-demo-0002")                       # RESTRICT
+    direct_vm.clear_mocks()
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0003", severity="MODERATE"))
+    c.check("vault-a", "osv", "GHSA-demo-0003")                       # RESTRICT
+    assert len(c.open_verdicts("vault-a")) == 3
+    direct_vm.clear_mocks()
+    # re-adjudication data: one shared OSV query response (same URL for every package) listing only 0003,
+    # so 0001 is no longer affected, 0002 is withdrawn, 0003 is still affected
+    from tests.direct.helpers import osv_query_hit
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0001"), query_hit=osv_query_hit("GHSA-demo-0003"))
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0002", severity="MODERATE", withdrawn="2026-09-05T00:00:00Z"))
+    mock_osv(direct_vm, osv_vuln("GHSA-demo-0003", severity="MODERATE"))
+    before = len(cap.actions())
+    out = c.request_resume_all("vault-a")
+    assert sorted(out["resumed"]) == ["GHSA-demo-0001", "GHSA-demo-0002"]
+    assert out["denied"] == {"GHSA-demo-0003": "STILL_AFFECTED"}
+    new = cap.actions()[before:]
+    assert sorted((m["calldata"]["args"][0], m["calldata"]["args"][1], m["on"]) for m in new) == [
+        ("GHSA-demo-0001", "RESUME", "finalized"), ("GHSA-demo-0002", "RESUME", "finalized")]
+    assert c.open_verdicts("vault-a") == [k for k in c.open_verdicts("vault-a") if "0003" in k]
+    assert direct_vm.run_validator() is True
+    # second call only sees the remaining incident
+    out2 = c.request_resume_all("vault-a")
+    assert out2 == {"resumed": [], "denied": {"GHSA-demo-0003": "STILL_AFFECTED"}}
+
+
+def test_resume_all_nothing_open_reverts_and_owner_only(direct_vm, direct_deploy, direct_owner, direct_bob):
+    c, _ = _setup(direct_deploy, direct_vm, direct_owner)
+    with direct_vm.expect_revert("Nothing to resume"):
+        c.request_resume_all("vault-a")
+    mock_osv(direct_vm, osv_vuln()); mock_llm_prereq(direct_vm, True)
+    c.check("vault-a", "osv", "GHSA-demo-0001")
+    with direct_vm.prank(direct_bob):
+        with direct_vm.expect_revert("Only target owner"):
+            c.request_resume_all("vault-a")
+
+
+def test_resume_all_validator_rejects_divergent_view(direct_vm, direct_deploy, direct_owner):
+    c, _ = _setup(direct_deploy, direct_vm, direct_owner)
+    mock_osv(direct_vm, osv_vuln()); mock_llm_prereq(direct_vm, True)
+    c.check("vault-a", "osv", "GHSA-demo-0001")
+    direct_vm.clear_mocks()
+    mock_osv(direct_vm, osv_vuln(), query_hit=False)
+    c.request_resume_all("vault-a")
+    direct_vm.clear_mocks()
+    mock_osv(direct_vm, osv_vuln(), query_hit=True)   # validator still sees it affected
+    assert direct_vm.run_validator() is False

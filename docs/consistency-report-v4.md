@@ -15,7 +15,7 @@ Source: `docs\consistency-run-v4.jsonl`, 30 check transactions, 5 identical targ
 
 ## Validator votes (all txs)
 
-{'IDLE': 60, 'AGREE': 90} of 150
+{'IDLE': 58, 'AGREE': 87} of 145
 AGREE share among non-idle votes: 100.0%
 
 

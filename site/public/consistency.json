@@ -22,23 +22,74 @@
       "disagree": 7,
       "idle": 54,
       "agree_share": "92.6%"
+    },
+    {
+      "label": "v4",
+      "checks": 30,
+      "targets": 5,
+      "stable_incidents": "6/6",
+      "accepted": "30/30",
+      "agree": 87,
+      "disagree": 0,
+      "idle": 58,
+      "agree_share": "100.0%"
     }
   ],
   "v3_per_incident": [
-    { "incident": "GHSA-29mw-wpgm-hmr9", "result": "5/5 RESTRICT", "disagree_votes": 0 },
-    { "incident": "GHSA-35jh-r3h4-6jhm", "result": "5/5 RESTRICT", "disagree_votes": 2 },
-    { "incident": "GHSA-f23m-r3pf-42rh", "result": "5/5 RESTRICT", "disagree_votes": 0 },
-    { "incident": "GHSA-p6mc-m468-83gw", "result": "5/5 PAUSE", "disagree_votes": 0 },
-    { "incident": "GHSA-r5fr-rjxr-66jc", "result": "2 PAUSE / 2 RESTRICT / 1 no verdict (unstable)", "disagree_votes": 3 },
-    { "incident": "GHSA-xxjr-mmjv-4gpg", "result": "5/5 RESTRICT", "disagree_votes": 0 }
+    {
+      "incident": "GHSA-29mw-wpgm-hmr9",
+      "result": "5/5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-35jh-r3h4-6jhm",
+      "result": "5/5 RESTRICT",
+      "disagree_votes": 2
+    },
+    {
+      "incident": "GHSA-f23m-r3pf-42rh",
+      "result": "5/5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-p6mc-m468-83gw",
+      "result": "5/5 PAUSE",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-r5fr-rjxr-66jc",
+      "result": "2 PAUSE / 2 RESTRICT / 1 no verdict (unstable)",
+      "disagree_votes": 3
+    },
+    {
+      "incident": "GHSA-xxjr-mmjv-4gpg",
+      "result": "5/5 RESTRICT",
+      "disagree_votes": 0
+    }
   ],
   "v4_retest": {
     "label": "v4 re-test",
     "per_incident": [
-      { "incident": "GHSA-r5fr-rjxr-66jc", "short": "r5fr", "result": "5/5 RESTRICT" },
-      { "incident": "GHSA-35jh-r3h4-6jhm", "short": "jh35", "result": "5/5 RESTRICT" },
-      { "incident": "GHSA-p6mc-m468-83gw", "short": "p6mc", "result": "3/3 PAUSE" },
-      { "incident": "GHSA-m9f4-gp45-2v27", "short": "m9f4", "result": "PAUSE" }
+      {
+        "incident": "GHSA-r5fr-rjxr-66jc",
+        "short": "r5fr",
+        "result": "5/5 RESTRICT"
+      },
+      {
+        "incident": "GHSA-35jh-r3h4-6jhm",
+        "short": "jh35",
+        "result": "5/5 RESTRICT"
+      },
+      {
+        "incident": "GHSA-p6mc-m468-83gw",
+        "short": "p6mc",
+        "result": "3/3 PAUSE"
+      },
+      {
+        "incident": "GHSA-m9f4-gp45-2v27",
+        "short": "m9f4",
+        "result": "PAUSE"
+      }
     ]
   },
   "bradbury": {
@@ -47,5 +98,37 @@
     "checks": 14,
     "verdicts_match_studionet_v4": true,
     "gen_spent": 0.008
-  }
+  },
+  "v4_per_incident": [
+    {
+      "incident": "GHSA-29mw-wpgm-hmr9",
+      "result": "5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-35jh-r3h4-6jhm",
+      "result": "5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-f23m-r3pf-42rh",
+      "result": "5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-p6mc-m468-83gw",
+      "result": "5 PAUSE",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-r5fr-rjxr-66jc",
+      "result": "5 RESTRICT",
+      "disagree_votes": 0
+    },
+    {
+      "incident": "GHSA-xxjr-mmjv-4gpg",
+      "result": "5 RESTRICT",
+      "disagree_votes": 0
+    }
+  ]
 }

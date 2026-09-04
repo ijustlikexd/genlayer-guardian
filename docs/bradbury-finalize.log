@@ -3,3 +3,14 @@
 2026-09-04T17:40:57Z sweep: finalized=0 not_ready_or_done=38
 2026-09-04T17:42:57Z vault after sweep: Result:{guardian:'0xc1D87D9a1998093fCA37ff460e53883698940FEe',log:['GHSA-p6mc-m468-83gw|RESTRICT->RESTRICTED','GHSA-35jh-r3h4-6jhm|RESTRICT->RESTRICTED','GHSA-f23m-r3pf-42rh|RESTRICT->RESTRICTED','GHSA-r5fr-rjxr-66jc|RESTRICT->RESTRICTED','GHSA-xxjr-mmjv-4gpg|RESTRICT->RESTRICTED','dup:GHSA-p6mc-m468-83gw|RESTRICT','dup:GHSA-35jh-r3h4-6jhm|RESTRICT','dup:GHSA-r5fr-rjxr-66jc|RESTRICT','GHSA-29mw-wpgm-hmr9|RESTRICT->RESTRICTED','GHSA-p6mc-m468-83gw|PAUSE->PAUSED'],mode:'PAUSED',open_incidents:{'GHSA-29mw-wpgm-hmr9':'RESTRICT','GHSA-35jh-r3h4-6jhm':'RESTRICT','GHSA-f23m-r3pf-42rh':'RESTRICT','GHSA-p6mc-m468-83gw':'PAUSE','GHSA-r5fr-rjxr-66jc':'RESTRICT','GHSA-xxjr-mmjv-4gpg':'RESTRICT'},resolve
 2026-09-04T17:47:46Z sweep2 (24 real ids): finalized=0 not_ready_or_done=23
+2026-09-04T17:58:14Z sweep3: finalized=0/7
+2026-09-04T17:59:14Z vault: [genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.  mode: 'PAUSED',  resolved: []
+18:07:01 not-finalized 0x31ddfc2f405969c414d336cc4adfafe6f22e007b4580308609596c8e8a4b8b48   status_name: 'FINALIZED'
+18:07:23 not-finalized 0x4c1ea0e92283fe0744a6078d685fe2cab20b648bf18fd5078fd6efeacc2cd11d   status_name: 'FINALIZED'
+18:08:14 not-finalized 0x4f7f1b2b652b76d238915e82762132719c1f21247255f364786d1c43e3e0f10a 
+18:08:34 not-finalized 0x64a2857baecd53a9db20d34aaa22eee1a3da2481f1b1b9ba89fa47201d051800   status_name: 'FINALIZED'
+18:08:53 not-finalized 0x8d3cda426377542e4e361006a200935ff8c3a9704dd055660db5e1560c71d16e   status_name: 'FINALIZED'
+18:09:30 not-finalized 0x93e496cb570d57075db70448f37fc98207948442da4147db0538ba649916578c   status_name: 'FINALIZED'
+18:10:02 not-finalized 0xb4fbec42aef9c139ea6b80108a1c720405de79ea461085e8b43e30ff03a21d20   status_name: 'FINALIZED'
+2026-09-04T18:10:02Z sweep4: finalized=0/7
+2026-09-04T18:10:48Z vault: [genlayer-js] initializeConsensusSmartContract() is deprecated and will be removed in a future release. The consensus contract is now resolved from the static chain definition.    'GHSA-p6mc-m468-83gw|RESUME->RESTRICTED',    'GHSA-29mw-wpgm-hmr9|RESUME->RESTRICTED',    'GHSA-35jh-r3h4-6jhm|RESUME->RESTRICTED',    'GHSA-f23m-r3pf-42rh|RESUME->RESTRICTED',    'GHSA-r5fr-rjxr-66jc|RESUME->RESTRICTED'

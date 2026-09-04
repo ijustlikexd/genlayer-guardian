@@ -1,8 +1,9 @@
 """Summarize docs/consistency-run.jsonl: per-incident verdict distribution across identical targets,
 and validator vote breakdown fetched from the Studionet receipt of each check tx.
 
-Usage: PYTHONUTF8=1 python scripts/consistency-report.py [docs/consistency-run.jsonl]
-Writes docs/consistency-report.md.
+Usage: PYTHONUTF8=1 python scripts/consistency-report.py [docs/consistency-run.jsonl] [--label v3]
+Writes docs/consistency-report.md and, when --label is given, merges the run into site/public/consistency.json
+(runs[] entry plus <label>_per_incident) so the site never needs hand-edited numbers.
 """
 import json
 import subprocess
@@ -10,7 +11,11 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-src = Path(sys.argv[1] if len(sys.argv) > 1 else "docs/consistency-run.jsonl")
+args = [a for a in sys.argv[1:] if not a.startswith("--")]
+label = None
+if "--label" in sys.argv:
+    label = sys.argv[sys.argv.index("--label") + 1]
+src = Path(args[0] if args else "docs/consistency-run.jsonl")
 rows = [json.loads(l) for l in src.read_text(encoding="utf-8").splitlines() if l.startswith("{")]
 checks = [r for r in rows if r.get("event") == "check_submitted"]
 print(f"{len(checks)} checks")

@@ -47,3 +47,9 @@ Correction after observing 24 Guardian transactions: 17 reached FINALIZED withou
 Consequence for Guardian: the keeper gains an optional finalizer duty that shortens PAUSE delivery to the window itself. It records the tx ids of the checks and resumes it submits and calls `finalize` once the window has elapsed. Finalization is permissionless and decision-bound, so this adds no trust: the keeper cannot change what gets finalized, only when the already-decided PAUSE or RESUME is delivered. Guardian tx ids can also be recovered from the consensus contract logs (`docs/bradbury-txids.txt`, recovered via `eth_getLogs` filtered on the Guardian address), so a finalizer does not depend on the original submitter.
 
 Bradbury block time observed: about 0.8 s.
+
+## RESUME on Bradbury, full lifecycle closed
+
+vault-a manifest upgraded to lodash 4.18.1 (17:30Z), six `request_resume` accepted 17:30 to 17:32Z with NO_LONGER_AFFECTED. The network finalized all six by about 18:07Z (appeal window plus network finalizer, roughly 35 minutes); our own finalize attempts at 17:40, 17:47, 17:58 were inside the window and reverted. Vault A log ends `GHSA-xxjr-mmjv-4gpg|RESUME->NORMAL`, mode NORMAL, six incidents in the resolved set.
+
+Bradbury now has the complete story on one vault: RESTRICT at accepted, PAUSE at finalized, RESUME after evidence changed, all decided by validators from public data, signed by the owner's wallet.

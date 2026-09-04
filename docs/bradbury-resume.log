@@ -2,3 +2,7 @@
 2026-09-04T17:30:11Z update_manifest: status_name: 'ACCEPTED'
 2026-09-04T17:30:29Z resume GHSA-p6mc-m468-83gw: status_name: 'ACCEPTED' 
 2026-09-04T17:30:54Z resume GHSA-29mw-wpgm-hmr9: status_name: 'ACCEPTED' 
+2026-09-04T17:31:18Z resume GHSA-35jh-r3h4-6jhm: status_name: 'ACCEPTED' 
+2026-09-04T17:31:42Z resume GHSA-f23m-r3pf-42rh: status_name: 'ACCEPTED' 
+2026-09-04T17:32:06Z resume GHSA-r5fr-rjxr-66jc: status_name: 'ACCEPTED' 
+2026-09-04T17:32:31Z resume GHSA-xxjr-mmjv-4gpg: status_name: 'ACCEPTED' 

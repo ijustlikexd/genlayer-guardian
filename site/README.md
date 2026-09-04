@@ -135,3 +135,8 @@ adjudicated"), so no console error is unhandled and the page never dies from it.
   since verdicts read via `get_verdict` do not carry their originating tx hash
   on-chain. Tx hashes tie back to hashes recorded in `docs/*.md`, not to live
   state.
+
+
+## Multi-network config (current shape)
+
+`site/public/config.json` now has `default_network` and a `networks` map. Each network entry holds `chain` (genlayer-js chains export name: `studionet` or `testnetBradbury`), `guardian`, and `targets`. The header switcher rebuilds the client per network and remembers the choice in localStorage. After a Guardian redeploy, edit only the matching `guardian` address and the target vault addresses.

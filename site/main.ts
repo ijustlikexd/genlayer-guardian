@@ -12,30 +12,59 @@ interface TargetConfig {
   vault: `0x${string}`;
 }
 
-interface SiteConfig {
-  network: string;
+interface NetworkConfig {
+  chain: string;
   guardian: `0x${string}`;
   targets: TargetConfig[];
-  explorer_tx: string;
+}
+
+interface SiteConfig {
+  default_network: string;
+  networks: Record<string, NetworkConfig>;
   repo_url?: string;
+}
+
+interface ConsistencyRun {
+  label: string;
+  checks: number;
+  targets: number;
+  stable_incidents: string;
+  accepted: string;
+  agree: number;
+  disagree: number;
+  idle: number;
+  agree_share: string;
+}
+
+interface ConsistencyPerIncident {
+  incident: string;
+  result: string;
+  disagree_votes?: number;
+}
+
+interface V4Retest {
+  label: string;
+  per_incident: Array<{ incident: string; short?: string; result: string }>;
+}
+
+interface BradburyRun {
+  label: string;
+  real_transactions: number;
+  checks: number;
+  verdicts_match_studionet_v4: boolean;
+  gen_spent: number;
 }
 
 interface ConsistencySnapshot {
   source: string;
-  total_checks: number;
-  targets: number;
-  stable_incidents: string;
-  votes: { AGREE: number; DISAGREE: number; IDLE: number; total: number };
-  agree_share_among_non_idle: number;
-  per_incident: Array<{
-    incident: string;
-    targets: number;
-    action: string;
-    prerequisites_met: boolean;
-    severity: string;
-    disagree_votes: number;
-  }>;
+  runs: ConsistencyRun[];
+  v3_per_incident: ConsistencyPerIncident[];
+  v4_retest: V4Retest;
+  bradbury: BradburyRun;
 }
+
+// The LocalStorage key used to persist the user's chosen network across visits.
+const NETWORK_STORAGE_KEY = "guardian-network";
 
 // ---------------------------------------------------------------- contract shapes
 // Mirrors the dict literals returned by contracts/Guardian.py and contracts/ToyVault.py views.
@@ -139,9 +168,17 @@ window.addEventListener("unhandledrejection", (event) => {
 // ---------------------------------------------------------------- state
 
 let config: SiteConfig | null = null;
+let currentNetworkKey: string | null = null;
 let client: GenLayerClient<GenLayerChain> | null = null;
 let consistency: ConsistencySnapshot | null = null;
 const targetInfoCache = new Map<string, TargetInfo>();
+
+function activeNetwork(): NetworkConfig {
+  if (!config || !currentNetworkKey) throw new Error("config not ready");
+  const net = config.networks[currentNetworkKey];
+  if (!net) throw new Error(`Unknown network "${currentNetworkKey}"`);
+  return net;
+}
 
 // ---------------------------------------------------------------- config + client bootstrap
 
@@ -159,11 +196,29 @@ async function loadConsistency(): Promise<ConsistencySnapshot> {
 
 function resolveChain(name: string): GenLayerChain {
   const table = chains as unknown as Record<string, GenLayerChain>;
-  // config uses the deployments.json spelling ("studionet"); genlayer-js chains
-  // module exports the same names (localnet, studionet, testnetAsimov, testnetBradbury).
+  // config.json's "chain" field uses the genlayer-js/chains export names
+  // (localnet, studionet, testnetAsimov, testnetBradbury).
   const chain = table[name];
-  if (!chain) throw new Error(`Unknown network "${name}" in config.json`);
+  if (!chain) throw new Error(`Unknown chain "${name}" in config.json`);
   return chain;
+}
+
+function readStoredNetwork(cfg: SiteConfig): string {
+  try {
+    const stored = localStorage.getItem(NETWORK_STORAGE_KEY);
+    if (stored && cfg.networks[stored]) return stored;
+  } catch {
+    // localStorage can be unavailable (private mode, disabled storage); fall through.
+  }
+  return cfg.default_network;
+}
+
+function persistNetworkChoice(key: string): void {
+  try {
+    localStorage.setItem(NETWORK_STORAGE_KEY, key);
+  } catch {
+    // Non-fatal: the choice just won't survive a reload.
+  }
 }
 
 // This page only ever calls readContract. genlayer-js's ClientConfig.account and
@@ -171,17 +226,17 @@ function resolveChain(name: string): GenLayerChain {
 // node_modules/genlayer-js/dist/index.d.ts and dist/index-C3Ul1Rte.d.ts on the
 // 1.1.8 build used here), so no signer, wallet, or throwaway account is needed
 // for a read-only client.
-function makeClient(cfg: SiteConfig): GenLayerClient<GenLayerChain> {
-  const chain = resolveChain(cfg.network);
+function makeClient(net: NetworkConfig): GenLayerClient<GenLayerChain> {
+  const chain = resolveChain(net.chain);
   return createClient({ chain: chain as any }) as GenLayerClient<GenLayerChain>;
 }
 
 // ---------------------------------------------------------------- contract reads
 
 async function getTarget(targetId: string): Promise<TargetInfo> {
-  if (!client || !config) throw new Error("client not ready");
+  if (!client) throw new Error("client not ready");
   const result = await client.readContract({
-    address: config.guardian,
+    address: activeNetwork().guardian,
     functionName: "get_target",
     args: [targetId],
   });
@@ -201,9 +256,9 @@ async function getVaultState(vaultAddress: `0x${string}`): Promise<VaultState> {
 }
 
 async function verdictKeyFor(targetId: string, source: string, incidentId: string): Promise<string> {
-  if (!client || !config) throw new Error("client not ready");
+  if (!client) throw new Error("client not ready");
   const result = await client.readContract({
-    address: config.guardian,
+    address: activeNetwork().guardian,
     functionName: "verdict_key_for",
     args: [targetId, source, incidentId],
   });
@@ -211,10 +266,10 @@ async function verdictKeyFor(targetId: string, source: string, incidentId: strin
 }
 
 async function tryGetVerdict(key: string): Promise<Verdict | null> {
-  if (!client || !config) throw new Error("client not ready");
+  if (!client) throw new Error("client not ready");
   try {
     const result = await client.readContract({
-      address: config.guardian,
+      address: activeNetwork().guardian,
       functionName: "get_verdict",
       args: [key],
     });
@@ -284,9 +339,10 @@ async function discoverOsvIncidents(deps: Dependency[]): Promise<OsvVulnSummary[
 
 // ---------------------------------------------------------------- rendering: header
 
-function renderHeader(cfg: SiteConfig): void {
-  $("network-value").textContent = cfg.network;
-  $("guardian-value").textContent = cfg.guardian;
+function renderHeader(cfg: SiteConfig, networkKey: string): void {
+  const net = cfg.networks[networkKey];
+  $("network-value").textContent = networkKey;
+  $("guardian-value").textContent = net ? net.guardian : "unknown";
   const repoEl = $("repo-value");
   repoEl.textContent = "";
   if (cfg.repo_url) {
@@ -295,6 +351,46 @@ function renderHeader(cfg: SiteConfig): void {
   } else {
     repoEl.textContent = "not set";
   }
+  for (const btn of Array.from(document.querySelectorAll<HTMLButtonElement>(".network-btn"))) {
+    btn.classList.toggle("active", btn.dataset.network === networkKey);
+  }
+}
+
+function setupNetworkSwitcher(cfg: SiteConfig): void {
+  for (const btn of Array.from(document.querySelectorAll<HTMLButtonElement>(".network-btn"))) {
+    const key = btn.dataset.network;
+    if (!key || !cfg.networks[key]) {
+      btn.disabled = true;
+      continue;
+    }
+    btn.addEventListener("click", () => {
+      if (key === currentNetworkKey) return;
+      persistNetworkChoice(key);
+      switchNetwork(key).catch((err) => {
+        showBanner(`Could not switch network: ${describeError(err)}`);
+      });
+    });
+  }
+}
+
+// Rebuilds the client for the newly selected network, re-renders targets and the
+// Try-it commands, and clears any target-specific incidents panel state (the
+// previously selected target belongs to the old network's target list).
+async function switchNetwork(networkKey: string): Promise<void> {
+  if (!config || !config.networks[networkKey]) throw new Error(`Unknown network "${networkKey}"`);
+  currentNetworkKey = networkKey;
+  targetInfoCache.clear();
+  selectedTargetId = null;
+
+  renderHeader(config, currentNetworkKey);
+  client = makeClient(activeNetwork());
+  renderTryIt(config, currentNetworkKey);
+
+  const panel = $("incidents-panel");
+  panel.innerHTML = "";
+  panel.appendChild(el("p", { className: "muted", text: "Select a target above to load its OSV-discovered incidents and verdicts." }));
+
+  await loadTargetsGrid(activeNetwork());
 }
 
 // ---------------------------------------------------------------- rendering: targets grid
@@ -358,7 +454,7 @@ function renderTargetCard(cfgTarget: TargetConfig, info: TargetInfo | null, stat
   return card;
 }
 
-async function loadTargetsGrid(cfg: SiteConfig): Promise<void> {
+async function loadTargetsGrid(cfg: NetworkConfig): Promise<void> {
   const grid = $("targets-grid");
   grid.innerHTML = "";
 
@@ -549,62 +645,116 @@ function cliCommandRow(cmd: string): HTMLElement {
   return row;
 }
 
-function renderTryIt(cfg: SiteConfig): void {
+function renderTryIt(cfg: SiteConfig, networkKey: string): void {
   const panel = $("tryit-panel");
   panel.innerHTML = "";
-  const sampleTarget = cfg.targets[0]?.id ?? "vault-a";
-  const sampleVault = cfg.targets[0]?.vault ?? "0x...";
+  const net = cfg.networks[networkKey];
+  if (!net) {
+    panel.appendChild(el("p", { className: "error-text", text: `Unknown network "${networkKey}"` }));
+    return;
+  }
+  const sampleTarget = net.targets[0]?.id ?? "vault-a";
+  const sampleVault = net.targets[0]?.vault ?? "0x...";
   const sampleIncident = "GHSA-p6mc-m468-83gw"; // the real advisory used throughout docs/studionet-run-2026-09-04.md
 
-  const commands = [
-    `npx genlayer call ${cfg.guardian} get_target --args ${sampleTarget}`,
-    `npx genlayer write ${cfg.guardian} check --args ${sampleTarget} osv ${sampleIncident}`,
-    `npx genlayer call ${cfg.guardian} get_verdict --args "${sampleTarget}|osv|${sampleIncident}|m1|p1"`,
+  const commands: string[] = [];
+  if (networkKey === "testnet-bradbury") {
+    commands.push(`npx genlayer network set testnet-bradbury`);
+  }
+  commands.push(
+    `npx genlayer call ${net.guardian} get_target --args ${sampleTarget}`,
+    `npx genlayer write ${net.guardian} check --args ${sampleTarget} osv ${sampleIncident}`,
+    `npx genlayer call ${net.guardian} get_verdict --args "${sampleTarget}|osv|${sampleIncident}|m1|p1"`,
     `npx genlayer call ${sampleVault} get_state`,
     `npm run keeper -- watch ${sampleTarget} --interval 120`,
-  ];
+  );
   for (const cmd of commands) panel.appendChild(cliCommandRow(cmd));
 }
 
 // ---------------------------------------------------------------- consistency panel
 
+function tableInScrollWrap(table: HTMLTableElement): HTMLElement {
+  const scrollWrap = el("div", { className: "table-scroll" });
+  scrollWrap.appendChild(table);
+  return scrollWrap;
+}
+
 function renderConsistency(data: ConsistencySnapshot): void {
   const panel = $("consistency-panel");
   panel.innerHTML = "";
 
-  const tiles = el("div", { className: "consistency-grid" });
-  const addTile = (value: string, label: string) => {
-    const tile = el("div", { className: "stat-tile" });
-    tile.appendChild(el("div", { className: "value", text: value }));
-    tile.appendChild(el("div", { className: "label", text: label }));
-    tiles.appendChild(tile);
-  };
-  addTile(String(data.total_checks), "check txs");
-  addTile(String(data.targets), "identical targets");
-  addTile(data.stable_incidents, "incidents stable");
-  addTile(`${data.agree_share_among_non_idle}%`, "AGREE share (non-idle)");
-  addTile(`${data.votes.AGREE}/${data.votes.DISAGREE}/${data.votes.IDLE}`, "AGREE/DISAGREE/IDLE votes");
-  panel.appendChild(tiles);
+  const sourceEl = document.getElementById("consistency-source");
+  if (sourceEl) sourceEl.textContent = data.source;
 
-  const table = el("table");
-  table.innerHTML = "<thead><tr><th>Incident</th><th>Action</th><th>Prereq met</th><th>Severity</th><th>Targets</th><th>Disagree votes</th></tr></thead>";
-  const tbody = el("tbody");
-  for (const row of data.per_incident) {
+  // ---- comparison table: v2, v3, and the Bradbury re-run ----
+  panel.appendChild(el("h3", { text: "Run comparison" }));
+  const cmpTable = el("table");
+  cmpTable.innerHTML =
+    "<thead><tr><th>Run</th><th>Checks</th><th>Targets</th><th>Stable incidents</th><th>Accepted</th><th>AGREE/DISAGREE/IDLE</th><th>AGREE share</th></tr></thead>";
+  const cmpBody = el("tbody");
+  for (const run of data.runs) {
+    const tr = el("tr");
+    tr.innerHTML = `
+      <td>${escapeHtml(run.label)}</td>
+      <td>${run.checks}</td>
+      <td>${run.targets}</td>
+      <td>${escapeHtml(run.stable_incidents)}</td>
+      <td>${escapeHtml(run.accepted)}</td>
+      <td>${run.agree}/${run.disagree}/${run.idle}</td>
+      <td>${escapeHtml(run.agree_share)}</td>
+    `;
+    cmpBody.appendChild(tr);
+  }
+  // Bradbury row: a smaller re-run with no comparable vote-share stats, folded
+  // into the same comparison table so it's visible alongside v2/v3 at a glance.
+  const b = data.bradbury;
+  const bradburyTr = el("tr");
+  bradburyTr.innerHTML = `
+    <td>${escapeHtml(b.label)}</td>
+    <td>${b.checks}</td>
+    <td>-</td>
+    <td>-</td>
+    <td>${b.real_transactions} tx, all ACCEPTED</td>
+    <td>-</td>
+    <td>${b.verdicts_match_studionet_v4 ? "all verdicts match Studionet v4" : "verdicts differ from Studionet v4"}</td>
+  `;
+  cmpBody.appendChild(bradburyTr);
+  cmpTable.appendChild(cmpBody);
+  panel.appendChild(tableInScrollWrap(cmpTable));
+  panel.appendChild(el("p", { className: "muted", text: `Bradbury spend: ${b.gen_spent} GEN across ${b.real_transactions} real transactions.` }));
+
+  // ---- per-incident table: v3 ----
+  panel.appendChild(el("h3", { text: "Per-incident detail: v3" }));
+  const v3Table = el("table");
+  v3Table.innerHTML = "<thead><tr><th>Incident</th><th>Result</th><th>Disagree votes</th></tr></thead>";
+  const v3Body = el("tbody");
+  for (const row of data.v3_per_incident) {
     const tr = el("tr");
     tr.innerHTML = `
       <td class="mono">${escapeHtml(row.incident)}</td>
-      <td class="action-tag action-${escapeHtml(row.action)}">${escapeHtml(row.action)}</td>
-      <td>${row.prerequisites_met}</td>
-      <td>${escapeHtml(row.severity)}</td>
-      <td>${row.targets}</td>
-      <td>${row.disagree_votes}</td>
+      <td>${escapeHtml(row.result)}</td>
+      <td>${row.disagree_votes ?? "-"}</td>
     `;
-    tbody.appendChild(tr);
+    v3Body.appendChild(tr);
   }
-  table.appendChild(tbody);
-  const scrollWrap = el("div", { className: "table-scroll" });
-  scrollWrap.appendChild(table);
-  panel.appendChild(scrollWrap);
+  v3Table.appendChild(v3Body);
+  panel.appendChild(tableInScrollWrap(v3Table));
+
+  // ---- per-incident table: v4 re-test ----
+  panel.appendChild(el("h3", { text: `Per-incident detail: ${data.v4_retest.label}` }));
+  const v4Table = el("table");
+  v4Table.innerHTML = "<thead><tr><th>Incident</th><th>Result</th></tr></thead>";
+  const v4Body = el("tbody");
+  for (const row of data.v4_retest.per_incident) {
+    const tr = el("tr");
+    tr.innerHTML = `
+      <td class="mono">${escapeHtml(row.incident)}</td>
+      <td>${escapeHtml(row.result)}</td>
+    `;
+    v4Body.appendChild(tr);
+  }
+  v4Table.appendChild(v4Body);
+  panel.appendChild(tableInScrollWrap(v4Table));
 
   const src = el("p", { className: "muted" });
   src.textContent = `Source: ${data.source}`;
@@ -620,17 +770,19 @@ async function main(): Promise<void> {
     showBanner(`Could not load config.json: ${describeError(err)}`);
     return;
   }
-  renderHeader(config);
+  currentNetworkKey = readStoredNetwork(config);
+  setupNetworkSwitcher(config);
+  renderHeader(config, currentNetworkKey);
 
   try {
-    client = makeClient(config);
+    client = makeClient(activeNetwork());
   } catch (err) {
     showBanner(`Could not create GenLayer client: ${describeError(err)}`);
     return;
   }
 
   setupVerdictLookup();
-  renderTryIt(config);
+  renderTryIt(config, currentNetworkKey);
 
   try {
     consistency = await loadConsistency();
@@ -640,7 +792,7 @@ async function main(): Promise<void> {
   }
 
   try {
-    await loadTargetsGrid(config);
+    await loadTargetsGrid(activeNetwork());
   } catch (err) {
     showBanner(`Could not load targets: ${describeError(err)}`);
   }

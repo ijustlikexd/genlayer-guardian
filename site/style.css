@@ -75,6 +75,38 @@ code, .mono {
   max-width: 60ch;
 }
 
+.network-switcher {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.network-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.network-btn:hover {
+  border-color: var(--accent);
+}
+
+.network-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 600;
+}
+
+.network-note {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;

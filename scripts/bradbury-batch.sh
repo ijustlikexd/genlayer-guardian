@@ -13,7 +13,7 @@ MB='{"target_id":"vault-b","dependencies":[{"ecosystem":"npm","name":"lodash","v
 MC='{"target_id":"vault-c","dependencies":[{"ecosystem":"npm","name":"lodash","version":"4.17.15"}],"config":{"accepts_external_json_merge":false,"uses_functions":["chunk","uniq"],"input_source":"internal constants only","note":"no user-controlled keys reach lodash"}}'
 w(){ # write and summarize
   R=$(npx genlayer write "$@" 2>&1)
-  TX=$(echo "$R" | grep -oE "tx_id: '0x[0-9a-f]+'" | head -1 | grep -oE "0x[0-9a-f]+")
+  TX=$(echo "$R" | grep -oE "tx_?[iI]d: '0x[0-9a-f]+'" | head -1 | grep -oE "0x[0-9a-f]+")
   ST=$(echo "$R" | grep -oE "status_name: '[A-Z_]+'" | tail -1 | grep -oE "'[A-Z_]+'" | tr -d "'")
   RN=$(echo "$R" | grep -oE "result_name: '[A-Z_]+'" | head -1 | grep -oE "'[A-Z_]+'" | tr -d "'")
   PL=$(echo "$R" | grep -oE "payload: '[^']*'" | tail -1)

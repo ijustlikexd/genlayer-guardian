@@ -35,3 +35,13 @@ Lesson for the keeper and the How-to: on Bradbury treat `LEADER_TIMEOUT` as "pol
 | vault-c | request_resume | denied STILL_AFFECTED | yes |
 
 ToyVault A: five RESTRICT applied at accepted; vault-c targets share the vault so their RESTRICTs show as `dup` entries. The `on='finalized'` PAUSE for p6mc was still pending at the time of writing (Bradbury finality window is longer than Studionet).
+
+## Finalization on Bradbury is a public action, not automatic
+
+Studionet finalizes transactions for you, which is why every `on='finalized'` PAUSE landed within a minute there. On Bradbury the protocol only opens the appeal window; after it closes **anyone must submit the finalization action** (`npx genlayer finalize <txId>`). Until then the stored status stays Accepted and on-finalization messages are not delivered.
+
+Observed: check tx `0x2accf319…d62a26a` (p6mc, vault-a) was Accepted at 17:03Z. `finalize` at about 17:30Z reverted (window still open); at 17:33:36Z it succeeded and the vault logged `GHSA-p6mc-m468-83gw|PAUSE->PAUSED` at 17:35Z. Appeal window on Bradbury is therefore on the order of 30 minutes.
+
+Consequence for Guardian: the keeper gains a finalizer duty. It records the tx ids of the checks and resumes it submits and calls `finalize` once the window has elapsed. Finalization is permissionless and decision-bound, so this adds no trust: the keeper cannot change what gets finalized, only when the already-decided PAUSE or RESUME is delivered. Guardian tx ids can also be recovered from the consensus contract logs (`docs/bradbury-txids.txt`, recovered via `eth_getLogs` filtered on the Guardian address), so a finalizer does not depend on the original submitter.
+
+Bradbury block time observed: about 0.8 s.

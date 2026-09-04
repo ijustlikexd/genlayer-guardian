@@ -31,6 +31,8 @@ class ToyVault(gl.Contract):
     def set_guardian(self, guardian: Address) -> None:
         if gl.message.sender_address != self.owner:
             raise gl.vm.UserError("Only owner")
+        if isinstance(guardian, str):  # SDK clients may send a hex string instead of an Address
+            guardian = Address(guardian)
         self.guardian = guardian
 
     # --------------------------------------------------------- guardian

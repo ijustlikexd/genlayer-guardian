@@ -10,6 +10,9 @@ against a registered protocol, without a human or an admin key in the loop. Inde
 validators fetch the advisory themselves, judge whether it applies to a specific deployment, and
 apply a policy the target pre-committed to.
 
+Live status site: https://ijustlikexd.github.io/genlayer-guardian/  
+Repository: https://github.com/ijustlikexd/genlayer-guardian
+
 ## The problem
 
 When a protocol's dependency has a public vulnerability, the actual power to react sits with

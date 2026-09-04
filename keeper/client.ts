@@ -132,6 +132,7 @@ export interface GuardianClient {
   ): Promise<{ txHash: string }>;
 
   requestResume(targetId: string, verdictKey: string): Promise<{ reasonCode: string; txHash: string }>;
+  finalize(txId: string): Promise<{ ok: boolean; evmTx?: string; error?: string }>;
   updateManifest(targetId: string, manifestJson: string): Promise<{ txHash: string }>;
   updatePolicy(targetId: string, policyJson: string): Promise<{ txHash: string }>;
 
@@ -333,6 +334,17 @@ export function createGuardianClient(options: CreateGuardianClientOptions): Guar
       });
       assertExecuted(rcpt_reg, "register_target");
       return { txHash: String(txHash) };
+    },
+
+    async finalize(txId: string): Promise<{ ok: boolean; evmTx?: string; error?: string }> {
+      // Permissionless, decision-bound: delivers on-finalization messages once the appeal window
+      // has closed. Reverts while the window is open; that is expected, retry later.
+      try {
+        const evmTx = await client.finalizeTransaction({ txId: txId as `0x${string}` });
+        return { ok: true, evmTx: String(evmTx) };
+      } catch (err: any) {
+        return { ok: false, error: String(err?.shortMessage ?? err?.message ?? err) };
+      }
     },
 
     async updateManifest(targetId: string, manifestJson: string): Promise<{ txHash: string }> {

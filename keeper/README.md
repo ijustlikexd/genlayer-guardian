@@ -36,3 +36,14 @@ Copy `.env.example` to `.env`:
 - `ACCOUNT_PRIVATE_KEY`: hex private key of the keeper's signing account.
 - `GENLAYER_NETWORK`: `localnet` | `studionet` | `testnet-asimov` | `testnet-bradbury`.
 - `GUARDIAN_ADDRESS`: deployed Guardian contract address.
+
+## Finalization (Bradbury)
+
+On Bradbury, finalization is a public action after the appeal window (about 30 minutes observed). Every
+`check` and `resume` this keeper submits is recorded in `keeper/pending-finalize.json`.
+
+- `finalize <txId...>`: finalize specific transactions.
+- `finalize-pending`: try every tracked transaction; finalized ones are dropped, not-ready ones stay.
+
+Finalization is decision-bound and permissionless: it delivers the already-decided PAUSE or RESUME, it cannot
+change it. Studionet finalizes automatically, so these commands are only needed on testnets.

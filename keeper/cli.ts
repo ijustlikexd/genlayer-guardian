@@ -12,7 +12,7 @@ import { loadEnv } from "./env.js";
 import { createGuardianClient, type NetworkName, type Source } from "./client.js";
 import { queryOsv, getOsvVuln } from "./osv.js";
 import { throttleByHost } from "./lib/http-host-throttle.js";
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 
 loadEnv();
 
@@ -47,6 +47,44 @@ function hasFlag(args: string[], name: string): boolean {
 
 // ---------------------------------------------------------------- commands
 
+
+// Pending-finalization tracker. Every check/resume tx this keeper submits is recorded here;
+// `finalize-pending` tries each and drops the ones that finalize. Local state only.
+const PENDING_PATH = "keeper/pending-finalize.json";
+function loadPending(): { txId: string; kind: string; submitted: string }[] {
+  try { return JSON.parse(readFileSync(PENDING_PATH, "utf-8")); } catch { return []; }
+}
+function savePending(list: { txId: string; kind: string; submitted: string }[]): void {
+  writeFileSync(PENDING_PATH, JSON.stringify(list, null, 2) + "\n");
+}
+function trackPending(txId: string, kind: string): void {
+  const list = loadPending();
+  if (!list.some((p) => p.txId === txId)) list.push({ txId, kind, submitted: new Date().toISOString() });
+  savePending(list);
+}
+
+async function cmdFinalize(args: string[]): Promise<void> {
+  if (!args.length) throw new Error("usage: finalize <txId> [<txId> ...]");
+  const client = getClient();
+  for (const txId of args) {
+    const r = await client.finalize(txId);
+    log(r.ok ? "finalized" : "finalize_not_ready", { tx_id: txId, evm_tx: r.evmTx, error: r.error });
+  }
+}
+
+async function cmdFinalizePending(): Promise<void> {
+  const client = getClient();
+  const list = loadPending();
+  const remaining: typeof list = [];
+  for (const p of list) {
+    const r = await client.finalize(p.txId);
+    if (r.ok) log("finalized", { tx_id: p.txId, kind: p.kind, evm_tx: r.evmTx });
+    else { remaining.push(p); log("finalize_not_ready", { tx_id: p.txId, kind: p.kind, error: r.error }); }
+  }
+  savePending(remaining);
+  log("finalize_pending_done", { finalized: list.length - remaining.length, remaining: remaining.length });
+}
+
 async function cmdCheck(args: string[]): Promise<void> {
   const [targetId, source, incidentId] = args;
   if (!targetId || !source || !incidentId) {
@@ -59,6 +97,7 @@ async function cmdCheck(args: string[]): Promise<void> {
 
   const client = getClient();
   const result = await client.check(targetId, source as Source, incidentId);
+  trackPending(String(result.txHash), "check");
   log("check_submitted", {
     target_id: targetId,
     source,
@@ -139,6 +178,7 @@ async function cmdResume(args: string[]): Promise<void> {
   if (!targetId || !verdictKey) throw new Error("usage: resume <target_id> <verdict_key>");
   const client = getClient();
   const { reasonCode, txHash } = await client.requestResume(targetId, verdictKey);
+  trackPending(String(txHash), "resume");
   log("resume_requested", { target_id: targetId, verdict_key: verdictKey, reason_code: reasonCode, tx_hash: txHash });
 }
 
@@ -203,7 +243,8 @@ async function cmdWatch(args: string[]): Promise<void> {
 
           try {
             const result = await client.check(targetId, "osv", id);
-            log("check_submitted", {
+            trackPending(String(result.txHash), "check");
+  log("check_submitted", {
               target_id: targetId,
               source: "osv",
               incident_id: id,
@@ -260,6 +301,10 @@ async function main(): Promise<void> {
       return cmdRegister(args);
     case "resume":
       return cmdResume(args);
+    case "finalize":
+      return cmdFinalize(args);
+    case "finalize-pending":
+      return cmdFinalizePending();
     case "update-manifest":
       return cmdUpdateManifest(args);
     case "update-policy":
@@ -269,6 +314,7 @@ async function main(): Promise<void> {
         [
           "usage: keeper <command> [args]",
           "  update-manifest <target_id> <manifest.json>   update-policy <target_id> <policy.json>",
+          "  finalize <txId...>   finalize-pending   (deliver on-finalization messages after the appeal window)",
           "",
           "  check <target_id> <source> <incident_id> [--wait-final]",
           "  watch <target_id> [--interval 300]",

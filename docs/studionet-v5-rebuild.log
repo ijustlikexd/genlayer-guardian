@@ -1,0 +1,29 @@
+== deploy-all studionet 19:05:20
+{"ts":"2026-09-04T19:05:32.948Z","event":"guardian_deployed","network":"studionet","address":"0x02d8b2dd887B774E9d518Fcb223d664E33cf4608","tx_hash":"0xe0b170914bde5fd4da0b09656bb68e638162b69175fd978fd9085a2c0a16b838"}
+{"ts":"2026-09-04T19:05:40.927Z","event":"vault_deployed","network":"studionet","target_id":"vault-a","address":"0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9","tx_hash":"0x3af7fcc30e6b114798c0d6043d552c94b1a01b4fc7eb969f647e60f14a57a7bd"}
+{"ts":"2026-09-04T19:05:45.668Z","event":"guardian_set","network":"studionet","target_id":"vault-a","vault_address":"0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9"}
+{"ts":"2026-09-04T19:05:50.366Z","event":"target_registered","network":"studionet","target_id":"vault-a","vault_address":"0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9","tx_hash":"0x5a24085b3d6da5e5e23818abea1cdaea88d44884f13993fae1cb8c54fe0ca70e"}
+{"ts":"2026-09-04T19:05:58.489Z","event":"vault_deployed","network":"studionet","target_id":"vault-b","address":"0x0A43d9217aB51103841d13977222bCa214b63938","tx_hash":"0xe9cde67d1231fa9f50c7d7601a179fa7ad35504c0697f685e78c0bdb3ffa0ea2"}
+{"ts":"2026-09-04T19:06:06.462Z","event":"guardian_set","network":"studionet","target_id":"vault-b","vault_address":"0x0A43d9217aB51103841d13977222bCa214b63938"}
+{"ts":"2026-09-04T19:06:11.249Z","event":"target_registered","network":"studionet","target_id":"vault-b","vault_address":"0x0A43d9217aB51103841d13977222bCa214b63938","tx_hash":"0x9b797093b6606e83430f4012469f861c0ef6cf47f2121cc522ed691515e1e707"}
+{"ts":"2026-09-04T19:06:19.262Z","event":"vault_deployed","network":"studionet","target_id":"vault-c","address":"0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083","tx_hash":"0x715e1f17c06d5436047c8ab151cce9b053024e964fddd2982a54b20bc897b1cc"}
+{"ts":"2026-09-04T19:06:27.191Z","event":"guardian_set","network":"studionet","target_id":"vault-c","vault_address":"0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083"}
+{"ts":"2026-09-04T19:06:31.863Z","event":"target_registered","network":"studionet","target_id":"vault-c","vault_address":"0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083","tx_hash":"0x97e258282182aeb71e5e20f70a4bed761a55c80d7c93e5dc9e73c748af231eb7"}
+{"ts":"2026-09-04T19:06:36.560Z","event":"vault_deployed","network":"studionet","target_id":"demo-repo","address":"0xd66234a30138E48Dd14ae6D512c467b3BF219122","tx_hash":"0x1d3eb179a9f93ee1ffe902d75fbd13dcde1885c16d40f4a0f6892f229629c42d"}
+{"ts":"2026-09-04T19:06:41.404Z","event":"guardian_set","network":"studionet","target_id":"demo-repo","vault_address":"0xd66234a30138E48Dd14ae6D512c467b3BF219122"}
+{"ts":"2026-09-04T19:06:46.172Z","event":"target_registered","network":"studionet","target_id":"demo-repo","vault_address":"0xd66234a30138E48Dd14ae6D512c467b3BF219122","tx_hash":"0x50fce4968b5107942b4efd587602ea9088c6ace04de2f6305537432425c00291"}
+{"ts":"2026-09-04T19:06:46.174Z","event":"env_guardian_address_updated","network":"studionet","guardian_address":"0x02d8b2dd887B774E9d518Fcb223d664E33cf4608"}
+{
+  "network": "studionet",
+  "signer": "env",
+  "guardian": "0x02d8b2dd887B774E9d518Fcb223d664E33cf4608",
+  "vaults": {
+    "vault-a": "0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9",
+    "vault-b": "0x0A43d9217aB51103841d13977222bCa214b63938",
+    "vault-c": "0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083",
+    "demo-repo": "0xd66234a30138E48Dd14ae6D512c467b3BF219122"
+  }
+}
+== env
+GUARDIAN_ADDRESS=0x02d8b2dd887B774E9d518Fcb223d664E33cf4608
+== checks

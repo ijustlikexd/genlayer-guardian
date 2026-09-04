@@ -10,8 +10,11 @@ against a registered protocol, without a human or an admin key in the loop. Inde
 validators fetch the advisory themselves, judge whether it applies to a specific deployment, and
 apply a policy the target pre-committed to.
 
+One page for judges: [SUBMISSION.md](SUBMISSION.md) (five-minute check, no wallet, no install).  
 Live status site: https://ijustlikexd.github.io/genlayer-guardian/  
 Repository: https://github.com/ijustlikexd/genlayer-guardian
+
+Guardian is a contract that governs other contracts' emergency posture from public evidence, with no admin key: validators decide whether an incident applies to a specific deployment, and the target executes a policy it committed to in advance.
 
 ## The problem
 
@@ -140,7 +143,7 @@ for an incident that has already been RESUMEd (logged as `late:...`).
 
 ## Live results (Studionet, real OSV/GitHub data, real validator LLMs)
 
-Current production Guardian: **`0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F`** (v4). Full narrative
+Current production Guardian: **`0x02d8b2dd887B774E9d518Fcb223d664E33cf4608`** (v4). Full narrative
 with tx hashes and timestamps: [docs/studionet-run-2026-09-04.md](docs/studionet-run-2026-09-04.md).
 
 ### Three-scenario end-to-end run (v1, `0x3d9662231eC7dB891d19BA7Fb360c10c0A70b754`)
@@ -213,9 +216,9 @@ You do not need a wallet or gas to check the read side; the Studio testnet CLI a
 ### 1. Read-only checks against the live v4 contract
 
 ```bash
-npx genlayer call 0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F get_target --args vault-a
-npx genlayer call 0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F verdict_key_for --args vault-a osv GHSA-p6mc-m468-83gw
-npx genlayer call 0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F get_verdict --args "<key from above>"
+npx genlayer call 0x02d8b2dd887B774E9d518Fcb223d664E33cf4608 get_target --args vault-a
+npx genlayer call 0x02d8b2dd887B774E9d518Fcb223d664E33cf4608 verdict_key_for --args vault-a osv GHSA-p6mc-m468-83gw
+npx genlayer call 0x02d8b2dd887B774E9d518Fcb223d664E33cf4608 get_verdict --args "<key from above>"
 npx genlayer call 0x2a51226330Da8DA06e06a3f3d96a8495C31072bC get_state
 ```
 

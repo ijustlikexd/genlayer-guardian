@@ -1,0 +1,1 @@
+{"target_id":"vault-a","dependencies":[{"ecosystem":"npm","name":"lodash","version":"4.18.1"}],"config":{"accepts_external_json_merge":true,"uses_functions":["merge","set","zipObjectDeep"],"input_source":"untrusted user JSON"}}

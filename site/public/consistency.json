@@ -1,0 +1,16 @@
+{
+  "source": "docs/consistency-report.md (docs/consistency-run.jsonl, studionet)",
+  "total_checks": 30,
+  "targets": 5,
+  "stable_incidents": "6/6",
+  "votes": { "AGREE": 90, "DISAGREE": 18, "IDLE": 42, "total": 150 },
+  "agree_share_among_non_idle": 83.3,
+  "per_incident": [
+    { "incident": "GHSA-29mw-wpgm-hmr9", "targets": 5, "action": "RESTRICT", "prerequisites_met": false, "severity": "moderate", "disagree_votes": 5 },
+    { "incident": "GHSA-35jh-r3h4-6jhm", "targets": 5, "action": "RESTRICT", "prerequisites_met": false, "severity": "high", "disagree_votes": 3 },
+    { "incident": "GHSA-f23m-r3pf-42rh", "targets": 5, "action": "RESTRICT", "prerequisites_met": false, "severity": "moderate", "disagree_votes": 2 },
+    { "incident": "GHSA-p6mc-m468-83gw", "targets": 5, "action": "PAUSE", "prerequisites_met": true, "severity": "high", "disagree_votes": 0 },
+    { "incident": "GHSA-r5fr-rjxr-66jc", "targets": 5, "action": "RESTRICT", "prerequisites_met": false, "severity": "high", "disagree_votes": 4 },
+    { "incident": "GHSA-xxjr-mmjv-4gpg", "targets": 5, "action": "RESTRICT", "prerequisites_met": false, "severity": "moderate", "disagree_votes": 2 }
+  ]
+}

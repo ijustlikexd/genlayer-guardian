@@ -1,0 +1,1 @@
+{"target_id":"stats","dependencies":[{"ecosystem":"npm","name":"lodash","version":"4.17.15"}],"config":{"accepts_external_json_merge":true,"uses_functions":["merge","set","zipObjectDeep"],"input_source":"untrusted user JSON"}}

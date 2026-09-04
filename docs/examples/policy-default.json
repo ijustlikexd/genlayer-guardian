@@ -1,0 +1,1 @@
+{"max_action_on_accepted":"RESTRICT","max_action_on_finalized":"PAUSE","min_severity_for_restrict":"moderate","min_severity_for_pause":"high","require_prerequisites_met_for_pause":true}

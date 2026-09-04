@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GenLayer Guardian - status</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <h1>GenLayer Guardian</h1>
+        <p class="tagline">
+          Protocols already know their dependencies. Guardian makes public security incidents
+          enforceable against them.
+        </p>
+        <dl class="meta">
+          <div><dt>Network</dt><dd id="network-value">loading...</dd></div>
+          <div><dt>Guardian address</dt><dd id="guardian-value" class="mono">loading...</dd></div>
+          <div><dt>Repo</dt><dd id="repo-value">loading...</dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section id="status-banner" class="banner" hidden></section>
+
+      <section aria-labelledby="targets-heading">
+        <h2 id="targets-heading">Targets</h2>
+        <div id="targets-grid" class="targets-grid">
+          <p class="muted">Loading targets...</p>
+        </div>
+      </section>
+
+      <section aria-labelledby="incidents-heading">
+        <h2 id="incidents-heading">Incidents</h2>
+        <p class="muted">Select a target above to load its OSV-discovered incidents and verdicts.</p>
+        <div id="incidents-panel"></div>
+
+        <div class="verdict-lookup">
+          <h3>Look up a verdict key</h3>
+          <p class="muted">
+            Paste any verdict key (for example one printed by the keeper CLI or the "Try it" panel
+            below) to fetch it directly, including <code>github_repo_advisory</code> keys.
+          </p>
+          <form id="verdict-lookup-form">
+            <input
+              id="verdict-key-input"
+              type="text"
+              placeholder="target_id|source|incident_id|m1|p1"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button type="submit">Fetch verdict</button>
+          </form>
+          <div id="verdict-lookup-result"></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="tryit-heading">
+        <h2 id="tryit-heading">Try it</h2>
+        <p class="muted">
+          Everything above is read-only and reproducible. These commands use the CLI account you
+          configure locally; the site never signs anything.
+        </p>
+        <div id="tryit-panel" class="tryit-panel"></div>
+      </section>
+
+      <section aria-labelledby="consistency-heading">
+        <h2 id="consistency-heading">Consistency (studionet run)</h2>
+        <p class="muted">
+          Static snapshot committed alongside the site; not a live query. Source:
+          <code>docs/consistency-report.md</code>.
+        </p>
+        <div id="consistency-panel"></div>
+      </section>
+    </main>
+
+    <footer class="wrap">
+      <p class="muted">
+        Read-only status board. Writes (register, check, request_resume) go through the keeper CLI
+        or <code>npx genlayer</code>, never through this page.
+      </p>
+    </footer>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

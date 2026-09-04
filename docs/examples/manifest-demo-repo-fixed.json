@@ -1,0 +1,1 @@
+{"target_id":"demo-repo","dependencies":[{"ecosystem":"npm","name":"guardian-demo-target","version":"1.3.0"}],"config":{"accepts_external_json_merge":true,"uses_functions":["mergeConfig"],"input_source":"untrusted user JSON"}}

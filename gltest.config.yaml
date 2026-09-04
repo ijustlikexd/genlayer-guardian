@@ -1,0 +1,20 @@
+# gltest network config. Builtin names (gltest_cli/config/constants.py):
+#   localnet, studionet, testnet_asimov, testnet_bradbury  (underscore, not hyphen)
+# Builtins already carry id + url; only accounts need to be supplied for testnets.
+networks:
+  default: studionet
+
+  localnet:
+    url: "http://127.0.0.1:4000/api"
+
+  studionet: {}
+
+  # For Bradbury runs, add under it:
+  #   accounts: ["${ACCOUNT_PRIVATE_KEY}"]   from: "${ACCOUNT_PRIVATE_KEY}"
+  # and put ACCOUNT_PRIVATE_KEY in .env. Left empty so direct-mode tests need no env.
+  testnet_bradbury: {}
+
+paths:
+  contracts: "contracts"
+
+environment: .env

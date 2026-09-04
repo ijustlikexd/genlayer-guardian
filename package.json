@@ -1,0 +1,17 @@
+{
+  "name": "genlayer-guardian-keeper",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "keeper": "tsx keeper/cli.ts",
+    "site:dev": "vite site",
+    "site:build": "vite build site"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "genlayer-js": "^1.1.8",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vite": "^5.4.0"
+  }
+}

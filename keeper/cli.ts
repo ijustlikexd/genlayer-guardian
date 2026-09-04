@@ -278,7 +278,7 @@ function runGenlayerCli(cliArgs: string[]): string {
 // UNVERIFIED: exact wording of `npx genlayer deploy` output was not observed live; this
 // matches a "Contract Address: 0x..." style line case-insensitively.
 function parseContractAddressFromCli(output: string): string {
-  const m = output.match(/contract address:?\s*(0x[0-9a-fA-F]+)/i);
+  const m = output.match(/contract address['"]?\s*:\s*['"]?(0x[0-9a-fA-F]{40})/i);
   if (!m) throw new Error(`Could not parse contract address from CLI output:\n${output}`);
   return m[1];
 }

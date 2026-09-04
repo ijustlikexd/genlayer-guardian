@@ -1,2 +1,5 @@
 2026-09-04T17:33:36Z attempt 1: FINALIZED } ✔ Transaction finalized 
 2026-09-04T17:35:06Z vault:     'GHSA-p6mc-m468-83gw|PAUSE->PAUSED'  mode: 'PAUSED',
+2026-09-04T17:40:57Z sweep: finalized=0 not_ready_or_done=38
+2026-09-04T17:42:57Z vault after sweep: Result:{guardian:'0xc1D87D9a1998093fCA37ff460e53883698940FEe',log:['GHSA-p6mc-m468-83gw|RESTRICT->RESTRICTED','GHSA-35jh-r3h4-6jhm|RESTRICT->RESTRICTED','GHSA-f23m-r3pf-42rh|RESTRICT->RESTRICTED','GHSA-r5fr-rjxr-66jc|RESTRICT->RESTRICTED','GHSA-xxjr-mmjv-4gpg|RESTRICT->RESTRICTED','dup:GHSA-p6mc-m468-83gw|RESTRICT','dup:GHSA-35jh-r3h4-6jhm|RESTRICT','dup:GHSA-r5fr-rjxr-66jc|RESTRICT','GHSA-29mw-wpgm-hmr9|RESTRICT->RESTRICTED','GHSA-p6mc-m468-83gw|PAUSE->PAUSED'],mode:'PAUSED',open_incidents:{'GHSA-29mw-wpgm-hmr9':'RESTRICT','GHSA-35jh-r3h4-6jhm':'RESTRICT','GHSA-f23m-r3pf-42rh':'RESTRICT','GHSA-p6mc-m468-83gw':'PAUSE','GHSA-r5fr-rjxr-66jc':'RESTRICT','GHSA-xxjr-mmjv-4gpg':'RESTRICT'},resolve
+2026-09-04T17:47:46Z sweep2 (24 real ids): finalized=0 not_ready_or_done=23

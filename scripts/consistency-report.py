@@ -37,8 +37,13 @@ def votes(tx):
     return []
 
 
-def verdict(key):
-    out = cli("call", GD, "get_verdict", "--args", key)
+def verdict(key, attempts=3):
+    """Transient RPC failures happen; retry so a hiccup is not reported as a missing verdict."""
+    out = ""
+    for _ in range(attempts):
+        out = cli("call", GD, "get_verdict", "--args", key)
+        if "action:" in out:
+            break
     d = {}
     for f in ("action", "severity_bucket", "prerequisites_met", "reason_code"):
         for line in out.splitlines():
@@ -76,3 +81,20 @@ same = sum(1 for items in per_incident.values() if len(Counter(i[1] for i in ite
 lines += ["", f"## Verdict stability: {same}/{len(per_incident)} incidents got the same action on every target."]
 Path("docs/consistency-report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 print("\n".join(lines))
+
+# ---- optional: merge this run into the site's static consistency data (no hand-edited numbers)
+if label:
+    sp = Path("site/public/consistency.json")
+    site = json.loads(sp.read_text(encoding="utf-8")) if sp.exists() else {"runs": []}
+    missing = sum(1 for items in per_incident.values() for i in items if i[1] is None)
+    run = {"label": label, "checks": len(checks), "targets": len({c["target_id"] for c in checks}),
+           "stable_incidents": f"{same}/{len(per_incident)}", "accepted": f"{len(checks) - missing}/{len(checks)}",
+           "agree": vote_counter["AGREE"], "disagree": vote_counter["DISAGREE"], "idle": vote_counter["IDLE"],
+           "agree_share": f"{vote_counter['AGREE'] / max(1, total_votes - vote_counter['IDLE']):.1%}"}
+    site["runs"] = [r for r in site.get("runs", []) if r.get("label") != label] + [run]
+    site[f"{label}_per_incident"] = [
+        {"incident": inc, "result": " / ".join(f"{n} {a}" for a, n in Counter(i[1] for i in items).items()),
+         "disagree_votes": sum(1 for i in items if "DISAGREE" in i[4])}
+        for inc, items in sorted(per_incident.items())]
+    sp.write_text(json.dumps(site, indent=2) + "\n", encoding="utf-8")
+    print(f"site/public/consistency.json updated for {label}")

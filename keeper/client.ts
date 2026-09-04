@@ -190,6 +190,18 @@ export function createGuardianClient(options: CreateGuardianClientOptions): Guar
     return options.guardianAddress;
   }
 
+  async function pollVerdict(key: string, attempts: number, delayMs: number): Promise<boolean> {
+    for (let i = 0; i < attempts; i++) {
+      try {
+        await client.readContract({ address: requireAddress(), functionName: "get_verdict", args: [key] });
+        return true;
+      } catch {
+        await new Promise((r) => setTimeout(r, delayMs));
+      }
+    }
+    return false;
+  }
+
   // Generic owner write: submit, wait ACCEPTED, surface on-chain rollbacks.
   async function simpleWrite(functionName: string, args: unknown[]): Promise<{ txHash: string }> {
     const address = requireAddress();
@@ -260,26 +272,34 @@ export function createGuardianClient(options: CreateGuardianClientOptions): Guar
         value: 0n,
       });
 
-      const acceptedReceipt = await client.waitForTransactionReceipt({
-        hash: txHash as TransactionHash,
-        status: TransactionStatus.ACCEPTED,
-        retries: 200,
-      });
-      assertExecuted(acceptedReceipt, "check");
-      const acceptedTime = nowIso();
-
       const verdictKey = await client.readContract({
         address,
         functionName: "verdict_key_for",
         args: [targetId, source, incidentId],
       });
 
+      let acceptedReceipt: GenLayerTransaction | undefined;
+      try {
+        acceptedReceipt = await client.waitForTransactionReceipt({
+          hash: txHash as TransactionHash,
+          status: TransactionStatus.ACCEPTED,
+          retries: 200,
+        });
+        assertExecuted(acceptedReceipt, "check");
+      } catch (err) {
+        // Bradbury can report LEADER_TIMEOUT to the client while the round still completes
+        // through rotation. Confirm by polling the verdict before treating this as a failure.
+        const found = await pollVerdict(String(verdictKey), 12, 15_000);
+        if (!found) throw err;
+      }
+      const acceptedTime = nowIso();
+
       return {
         verdictKey: String(verdictKey),
         txHash: String(txHash),
         submitTime,
         acceptedTime,
-        acceptedReceipt,
+        acceptedReceipt: acceptedReceipt as GenLayerTransaction,
       };
     },
 

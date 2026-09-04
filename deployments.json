@@ -12,5 +12,13 @@
   "vault_e_demo_repo": "0xff1C73E6774320073881C44A7243A0B13eC6C03B",
   "guardian_v2": "0x69d6cbaBc2567A21B38fa4cAEd24835f9A988e50",
   "guardian_v3": "0x35D13270c40F9406D437cEa8Cd4b9D38cbC81eDC"
+ },
+ {
+  "network": "testnet-bradbury",
+  "chainId": 4221,
+  "deployedAt": "2026-09-05",
+  "deployer": "0xa1d6346d736964feb320f206cc28ab3c292bc4a2",
+  "guardian": "0xc1D87D9a1998093fCA37ff460e53883698940FEe",
+  "vault_a": "0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46"
  }
 ]

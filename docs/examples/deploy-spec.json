@@ -1,0 +1,91 @@
+{
+  "targets": [
+    {
+      "target_id": "vault-a",
+      "manifest": {
+        "target_id": "vault-a",
+        "dependencies": [
+          { "ecosystem": "npm", "name": "lodash", "version": "4.17.15" }
+        ],
+        "config": {
+          "accepts_external_json_merge": true,
+          "uses_functions": ["merge", "set", "zipObjectDeep"],
+          "input_source": "untrusted user JSON"
+        }
+      },
+      "policy": {
+        "max_action_on_accepted": "RESTRICT",
+        "max_action_on_finalized": "PAUSE",
+        "min_severity_for_restrict": "moderate",
+        "min_severity_for_pause": "high",
+        "require_prerequisites_met_for_pause": true
+      },
+      "source_repo": ""
+    },
+    {
+      "target_id": "vault-b",
+      "manifest": {
+        "target_id": "vault-b",
+        "dependencies": [
+          { "ecosystem": "npm", "name": "lodash", "version": "4.18.1" }
+        ],
+        "config": {
+          "accepts_external_json_merge": true
+        }
+      },
+      "policy": {
+        "max_action_on_accepted": "RESTRICT",
+        "max_action_on_finalized": "PAUSE",
+        "min_severity_for_restrict": "moderate",
+        "min_severity_for_pause": "high",
+        "require_prerequisites_met_for_pause": true
+      },
+      "source_repo": ""
+    },
+    {
+      "target_id": "vault-c",
+      "manifest": {
+        "target_id": "vault-c",
+        "dependencies": [
+          { "ecosystem": "npm", "name": "lodash", "version": "4.17.15" }
+        ],
+        "config": {
+          "accepts_external_json_merge": false,
+          "uses_functions": ["chunk", "uniq"],
+          "input_source": "internal constants only",
+          "note": "no user-controlled keys reach lodash"
+        }
+      },
+      "policy": {
+        "max_action_on_accepted": "RESTRICT",
+        "max_action_on_finalized": "PAUSE",
+        "min_severity_for_restrict": "moderate",
+        "min_severity_for_pause": "high",
+        "require_prerequisites_met_for_pause": true
+      },
+      "source_repo": ""
+    },
+    {
+      "target_id": "demo-repo",
+      "manifest": {
+        "target_id": "demo-repo",
+        "dependencies": [
+          { "ecosystem": "npm", "name": "guardian-demo-target", "version": "1.2.0" }
+        ],
+        "config": {
+          "accepts_external_json_merge": true,
+          "uses_functions": ["mergeConfig"],
+          "input_source": "untrusted user JSON"
+        }
+      },
+      "policy": {
+        "max_action_on_accepted": "RESTRICT",
+        "max_action_on_finalized": "PAUSE",
+        "min_severity_for_restrict": "moderate",
+        "min_severity_for_pause": "high",
+        "require_prerequisites_met_for_pause": true
+      },
+      "source_repo": "ijustlikexd/guardian-demo-target"
+    }
+  ]
+}

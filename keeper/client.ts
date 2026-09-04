@@ -21,8 +21,10 @@ import type {
   GenLayerChain,
   TransactionHash,
   GenLayerTransaction,
+  DecodedDeployData,
 } from "genlayer-js/types";
 import { TransactionStatus } from "genlayer-js/types";
+import { readFileSync } from "fs";
 
 export type NetworkName = "localnet" | "studionet" | "testnet-asimov" | "testnet-bradbury";
 
@@ -123,6 +125,9 @@ export interface GuardianClient {
   check(targetId: string, source: Source, incidentId: string): Promise<CheckResult>;
   waitFinalized(txHash: string): Promise<{ receipt: GenLayerTransaction; finalizedTime: string }>;
 
+  deployContract(codePath: string, args: unknown[]): Promise<{ address: string; txHash: string }>;
+  setGuardian(vaultAddress: `0x${string}`, guardianAddress: `0x${string}`): Promise<{ txHash: string }>;
+
   registerTarget(
     targetId: string,
     targetAddress: `0x${string}`,
@@ -173,6 +178,18 @@ export function assertExecuted(receipt: unknown, what: string): void {
 
 function nowIso(): string {
   return new Date().toISOString();
+}
+
+// Deploy address extraction. On localnet the address lives at receipt.data.contract_address.
+// On other chains (Studionet, Bradbury) it is normally receipt.txDataDecoded.contractAddress;
+// UNVERIFIED against a live Bradbury/Studionet deploy, so this also falls back to
+// receipt.data.contract_address per the task's guidance, in case a network reports it there too.
+function extractDeployedAddress(receipt: any): string {
+  const decoded = (receipt?.txDataDecoded as DecodedDeployData | undefined)?.contractAddress;
+  if (decoded) return String(decoded);
+  const fallback = receipt?.data?.contract_address;
+  if (fallback) return String(fallback);
+  throw new Error(`Could not extract deployed contract address from receipt: ${JSON.stringify(receipt)}`);
 }
 
 export function createGuardianClient(options: CreateGuardianClientOptions): GuardianClient {
@@ -311,6 +328,35 @@ export function createGuardianClient(options: CreateGuardianClientOptions): Guar
         retries: 200,
       });
       return { receipt, finalizedTime: nowIso() };
+    },
+
+    async deployContract(codePath: string, args: unknown[]): Promise<{ address: string; txHash: string }> {
+      const code = new Uint8Array(readFileSync(codePath));
+      const txHash = await client.deployContract({ code, args: args as any });
+      const receipt = await client.waitForTransactionReceipt({
+        hash: txHash as TransactionHash,
+        status: TransactionStatus.ACCEPTED,
+        retries: 200,
+      });
+      assertExecuted(receipt, "deploy");
+      const address = extractDeployedAddress(receipt);
+      return { address, txHash: String(txHash) };
+    },
+
+    async setGuardian(vaultAddress: `0x${string}`, guardianAddress: `0x${string}`): Promise<{ txHash: string }> {
+      const txHash = await client.writeContract({
+        address: vaultAddress,
+        functionName: "set_guardian",
+        args: [guardianAddress],
+        value: 0n,
+      });
+      const rcpt = await client.waitForTransactionReceipt({
+        hash: txHash as TransactionHash,
+        status: TransactionStatus.ACCEPTED,
+        retries: 200,
+      });
+      assertExecuted(rcpt, "set_guardian");
+      return { txHash: String(txHash) };
     },
 
     async registerTarget(

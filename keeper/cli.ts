@@ -12,7 +12,8 @@ import { loadEnv } from "./env.js";
 import { createGuardianClient, type NetworkName, type Source } from "./client.js";
 import { queryOsv, getOsvVuln } from "./osv.js";
 import { throttleByHost } from "./lib/http-host-throttle.js";
-import { readFileSync, writeFileSync } from "fs";
+import { readFileSync, writeFileSync, existsSync } from "fs";
+import { execFileSync } from "child_process";
 
 loadEnv();
 
@@ -33,6 +34,23 @@ function getClient() {
   const network = (process.env.GENLAYER_NETWORK || "studionet") as NetworkName;
   const guardianAddress = requireEnv("GUARDIAN_ADDRESS") as `0x${string}`;
   return createGuardianClient({ network, privateKey, guardianAddress });
+}
+
+// For commands that do not need a Guardian contract address (deploy, set-guardian).
+function getClientNoAddress() {
+  const privateKey = requireEnv("ACCOUNT_PRIVATE_KEY") as `0x${string}`;
+  const network = (process.env.GENLAYER_NETWORK || "studionet") as NetworkName;
+  return createGuardianClient({ network, privateKey });
+}
+
+// CLI args after the required positionals are passed through as constructor args.
+// JSON-decode each one so numbers/booleans/objects survive; fall back to the raw string.
+function parseArg(raw: string): unknown {
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return raw;
+  }
 }
 
 function parseFlag(args: string[], name: string): string | undefined {
@@ -72,7 +90,8 @@ async function cmdFinalize(args: string[]): Promise<void> {
   }
 }
 
-async function cmdFinalizePending(): Promise<void> {
+// One pass over the tracker: try every pending tx, drop the ones that finalize. Returns how many remain.
+async function finalizePendingRound(): Promise<number> {
   const client = getClient();
   const list = loadPending();
   const remaining: typeof list = [];
@@ -83,6 +102,35 @@ async function cmdFinalizePending(): Promise<void> {
   }
   savePending(remaining);
   log("finalize_pending_done", { finalized: list.length - remaining.length, remaining: remaining.length });
+  return remaining.length;
+}
+
+const FINALIZE_UNTIL_EMPTY_MAX_ROUNDS = 24;
+
+async function cmdFinalizePending(args: string[]): Promise<void> {
+  if (!hasFlag(args, "--until-empty")) {
+    await finalizePendingRound();
+    return;
+  }
+
+  const intervalSec = Number(parseFlag(args, "--interval") ?? "300");
+  let stopped = false;
+  const shutdown = () => {
+    if (stopped) return;
+    stopped = true;
+    log("finalize_pending_stopped", {});
+    process.exit(0);
+  };
+  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown);
+
+  for (let round = 0; round < FINALIZE_UNTIL_EMPTY_MAX_ROUNDS && !stopped; round++) {
+    const remaining = await finalizePendingRound();
+    if (remaining === 0 || stopped) break;
+    if (round < FINALIZE_UNTIL_EMPTY_MAX_ROUNDS - 1) {
+      await new Promise((r) => setTimeout(r, intervalSec * 1000));
+    }
+  }
 }
 
 async function cmdCheck(args: string[]): Promise<void> {
@@ -153,6 +201,25 @@ async function cmdRegister(args: string[]): Promise<void> {
   log("target_registered", { target_id: targetId, vault_address: vaultAddress, tx_hash: txHash });
 }
 
+async function cmdDeploy(args: string[]): Promise<void> {
+  const [codePath, ...ctorArgsRaw] = args;
+  if (!codePath) throw new Error("usage: deploy <contracts/File.py> [args...]");
+  const ctorArgs = ctorArgsRaw.map(parseArg);
+  const client = getClientNoAddress();
+  const { address, txHash } = await client.deployContract(codePath, ctorArgs);
+  console.log(JSON.stringify({ address, tx_hash: txHash }));
+}
+
+async function cmdSetGuardian(args: string[]): Promise<void> {
+  const [vaultAddress, guardianAddress] = args;
+  if (!vaultAddress || !guardianAddress) {
+    throw new Error("usage: set-guardian <vault_address> <guardian_address>");
+  }
+  const client = getClientNoAddress();
+  const { txHash } = await client.setGuardian(vaultAddress as `0x${string}`, guardianAddress as `0x${string}`);
+  log("guardian_set", { vault_address: vaultAddress, guardian_address: guardianAddress, tx_hash: txHash });
+}
+
 async function cmdUpdateManifest(args: string[]): Promise<void> {
   const [targetId, manifestPath] = args;
   if (!targetId || !manifestPath) throw new Error("usage: update-manifest <target_id> <manifest.json path>");
@@ -180,6 +247,212 @@ async function cmdResume(args: string[]): Promise<void> {
   const { reasonCode, txHash } = await client.requestResume(targetId, verdictKey);
   trackPending(String(txHash), "resume");
   log("resume_requested", { target_id: targetId, verdict_key: verdictKey, reason_code: reasonCode, tx_hash: txHash });
+}
+
+// ------------------------------------------------------------ deploy-all
+
+interface DeploySpecTarget {
+  target_id: string;
+  manifest: string | Record<string, unknown>;
+  policy: string | Record<string, unknown>;
+  source_repo: string;
+}
+
+interface DeploySpec {
+  targets: DeploySpecTarget[];
+}
+
+// A manifest/policy field is either an inline JSON object or a path to a JSON file.
+function resolveJsonField(value: string | Record<string, unknown>): string {
+  if (typeof value === "string") return readFileSync(value, "utf-8").trim();
+  return JSON.stringify(value);
+}
+
+// Run the genlayer CLI (npx genlayer ...) and return its stdout. Used only by the
+// --signer cli path of deploy-all, so the CLI's own active account signs instead of
+// the .env keeper key. `shell: true` because `npx` is a .cmd shim on Windows.
+function runGenlayerCli(cliArgs: string[]): string {
+  return execFileSync("npx", ["genlayer", ...cliArgs], { encoding: "utf-8", shell: true });
+}
+
+// UNVERIFIED: exact wording of `npx genlayer deploy` output was not observed live; this
+// matches a "Contract Address: 0x..." style line case-insensitively.
+function parseContractAddressFromCli(output: string): string {
+  const m = output.match(/contract address:?\s*(0x[0-9a-fA-F]+)/i);
+  if (!m) throw new Error(`Could not parse contract address from CLI output:\n${output}`);
+  return m[1];
+}
+
+function cliDeploy(contractPath: string): string {
+  const output = runGenlayerCli(["deploy", "--contract", contractPath]);
+  return parseContractAddressFromCli(output);
+}
+
+function cliSetGuardian(vaultAddress: string, guardianAddress: string): void {
+  runGenlayerCli(["write", vaultAddress, "set_guardian", "--args", guardianAddress]);
+}
+
+const DEPLOYMENTS_PATH = "deployments.json";
+
+interface DeploymentCurrentEntry {
+  guardian: string;
+  vaults: Record<string, string>;
+  deployedAt: string;
+  signer: "env" | "cli";
+}
+
+interface DeploymentsFile {
+  current: Record<string, DeploymentCurrentEntry>;
+  history: unknown[];
+}
+
+// Migrates the old flat-array deployments.json into { current, history } on first run,
+// preserving every previous entry verbatim in history.
+function updateDeploymentsFile(network: string, signer: "env" | "cli", guardian: string, vaults: Record<string, string>): void {
+  let raw: unknown = null;
+  try { raw = JSON.parse(readFileSync(DEPLOYMENTS_PATH, "utf-8")); } catch { raw = null; }
+
+  let file: DeploymentsFile;
+  if (Array.isArray(raw)) {
+    file = { current: {}, history: raw };
+  } else if (raw && typeof raw === "object" && "current" in (raw as Record<string, unknown>)) {
+    file = raw as DeploymentsFile;
+  } else {
+    file = { current: {}, history: [] };
+  }
+
+  file.current[network] = { guardian, vaults, deployedAt: new Date().toISOString(), signer };
+  writeFileSync(DEPLOYMENTS_PATH, JSON.stringify(file, null, 2) + "\n");
+}
+
+const SITE_CONFIG_PATH = "site/public/config.json";
+
+// Updates only the deployed network's guardian/targets values in site/public/config.json.
+// Leaves every other key (default_network, other networks, repo_url) untouched.
+function updateSiteConfig(network: string, guardian: string, vaults: Record<string, string>): void {
+  let config: any;
+  try {
+    config = JSON.parse(readFileSync(SITE_CONFIG_PATH, "utf-8"));
+  } catch {
+    log("site_config_missing", { path: SITE_CONFIG_PATH });
+    return;
+  }
+  config.networks = config.networks || {};
+  const entry = config.networks[network] || {};
+  entry.guardian = guardian;
+  entry.targets = Object.entries(vaults).map(([id, vault]) => ({ id, vault }));
+  if (!entry.chain) entry.chain = network === "testnet-bradbury" ? "testnetBradbury" : network;
+  config.networks[network] = entry;
+  writeFileSync(SITE_CONFIG_PATH, JSON.stringify(config, null, 2) + "\n");
+}
+
+// Writes GUARDIAN_ADDRESS into .env only if this deploy's network matches the network
+// the .env file itself is already configured for. Never creates .env from scratch.
+function maybeWriteEnvGuardianAddress(network: string, guardianAddress: string): void {
+  if (process.env.GENLAYER_NETWORK !== network) return;
+  const envPath = ".env";
+  if (!existsSync(envPath)) return;
+  const lines = readFileSync(envPath, "utf-8").split(/\r?\n/);
+  let found = false;
+  const updated = lines.map((line) => {
+    if (/^GUARDIAN_ADDRESS=/.test(line)) { found = true; return `GUARDIAN_ADDRESS=${guardianAddress}`; }
+    return line;
+  });
+  if (!found) updated.push(`GUARDIAN_ADDRESS=${guardianAddress}`);
+  writeFileSync(envPath, updated.join("\n"));
+  log("env_guardian_address_updated", { network, guardian_address: guardianAddress });
+}
+
+async function cmdDeployAll(args: string[]): Promise<void> {
+  const [network] = args;
+  if (!network) {
+    throw new Error("usage: deploy-all <network> [--signer env|cli] [--spec docs/examples/deploy-spec.json]");
+  }
+  const signer = (parseFlag(args, "--signer") ?? "env") as "env" | "cli";
+  if (signer !== "env" && signer !== "cli") throw new Error('--signer must be "env" or "cli"');
+  const specPath = parseFlag(args, "--spec") ?? "docs/examples/deploy-spec.json";
+
+  const spec = JSON.parse(readFileSync(specPath, "utf-8")) as DeploySpec;
+  if (!spec.targets || !spec.targets.length) throw new Error(`No targets in spec ${specPath}`);
+
+  const netName = network as NetworkName;
+  const vaults: Record<string, string> = {};
+  let guardianAddress: string;
+
+  if (signer === "env") {
+    const privateKey = requireEnv("ACCOUNT_PRIVATE_KEY") as `0x${string}`;
+
+    // No guardian address yet: this client can only deploy.
+    const deployClient = createGuardianClient({ network: netName, privateKey });
+    const guardianDeploy = await deployClient.deployContract("contracts/Guardian.py", []);
+    guardianAddress = guardianDeploy.address;
+    log("guardian_deployed", { network, address: guardianAddress, tx_hash: guardianDeploy.txHash });
+
+    // Fresh client bound to the newly deployed Guardian, for vault set_guardian + register_target.
+    const registryClient = createGuardianClient({
+      network: netName,
+      privateKey,
+      guardianAddress: guardianAddress as `0x${string}`,
+    });
+
+    for (const target of spec.targets) {
+      const vaultDeploy = await registryClient.deployContract("contracts/ToyVault.py", []);
+      log("vault_deployed", { network, target_id: target.target_id, address: vaultDeploy.address, tx_hash: vaultDeploy.txHash });
+
+      await registryClient.setGuardian(vaultDeploy.address as `0x${string}`, guardianAddress as `0x${string}`);
+      log("guardian_set", { network, target_id: target.target_id, vault_address: vaultDeploy.address });
+
+      const { txHash } = await registryClient.registerTarget(
+        target.target_id,
+        vaultDeploy.address as `0x${string}`,
+        resolveJsonField(target.manifest),
+        resolveJsonField(target.policy),
+        target.source_repo || "",
+      );
+      log("target_registered", { network, target_id: target.target_id, vault_address: vaultDeploy.address, tx_hash: txHash });
+
+      vaults[target.target_id] = vaultDeploy.address;
+    }
+  } else {
+    // signer === "cli": deploy + set_guardian shell out so the CLI's active account
+    // (the owner's wallet) signs, without this process ever touching that key.
+    // register_target still uses the .env keeper key, since that is the account
+    // Guardian expects to call check/register with going forward.
+    guardianAddress = cliDeploy("contracts/Guardian.py");
+    log("guardian_deployed", { network, address: guardianAddress });
+
+    const privateKey = requireEnv("ACCOUNT_PRIVATE_KEY") as `0x${string}`;
+    const registryClient = createGuardianClient({
+      network: netName,
+      privateKey,
+      guardianAddress: guardianAddress as `0x${string}`,
+    });
+
+    for (const target of spec.targets) {
+      const vaultAddress = cliDeploy("contracts/ToyVault.py");
+      log("vault_deployed", { network, target_id: target.target_id, address: vaultAddress });
+
+      cliSetGuardian(vaultAddress, guardianAddress);
+      log("guardian_set", { network, target_id: target.target_id, vault_address: vaultAddress });
+
+      const { txHash } = await registryClient.registerTarget(
+        target.target_id,
+        vaultAddress as `0x${string}`,
+        resolveJsonField(target.manifest),
+        resolveJsonField(target.policy),
+        target.source_repo || "",
+      );
+      log("target_registered", { network, target_id: target.target_id, vault_address: vaultAddress, tx_hash: txHash });
+
+      vaults[target.target_id] = vaultAddress;
+    }
+  }
+
+  updateDeploymentsFile(network, signer, guardianAddress, vaults);
+  updateSiteConfig(network, guardianAddress, vaults);
+  maybeWriteEnvGuardianAddress(network, guardianAddress);
+
+  console.log(JSON.stringify({ network, signer, guardian: guardianAddress, vaults }, null, 2));
 }
 
 async function cmdWatch(args: string[]): Promise<void> {
@@ -304,17 +577,24 @@ async function main(): Promise<void> {
     case "finalize":
       return cmdFinalize(args);
     case "finalize-pending":
-      return cmdFinalizePending();
+      return cmdFinalizePending(args);
     case "update-manifest":
       return cmdUpdateManifest(args);
     case "update-policy":
       return cmdUpdatePolicy(args);
+    case "deploy":
+      return cmdDeploy(args);
+    case "set-guardian":
+      return cmdSetGuardian(args);
+    case "deploy-all":
+      return cmdDeployAll(args);
     default:
       console.error(
         [
           "usage: keeper <command> [args]",
           "  update-manifest <target_id> <manifest.json>   update-policy <target_id> <policy.json>",
-          "  finalize <txId...>   finalize-pending   (deliver on-finalization messages after the appeal window)",
+          "  finalize <txId...>   finalize-pending [--until-empty] [--interval 300]",
+          "    (deliver on-finalization messages after the appeal window)",
           "",
           "  check <target_id> <source> <incident_id> [--wait-final]",
           "  watch <target_id> [--interval 300]",
@@ -322,6 +602,11 @@ async function main(): Promise<void> {
           "  vault <address>",
           "  register <target_id> <vault_address> <manifest.json path> <policy.json path> [source_repo]",
           "  resume <target_id> <verdict_key>",
+          "",
+          "  deploy <contracts/File.py> [args...]           deploy a contract, print {address, tx_hash}",
+          "  set-guardian <vault_address> <guardian_address>",
+          "  deploy-all <network> [--signer env|cli] [--spec docs/examples/deploy-spec.json]",
+          "    build a full environment: deploy Guardian, deploy+wire+register every spec target",
         ].join("\n"),
       );
       process.exit(1);

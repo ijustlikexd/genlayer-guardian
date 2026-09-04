@@ -38,7 +38,9 @@ jobs:
           pip install git+https://github.com/genlayerlabs/genvm-linter@main
 
       - name: Lint contracts
-        run: genvm-lint check contracts/Guardian.py contracts/ToyVault.py
+        run: |
+          genvm-lint check contracts/Guardian.py
+          genvm-lint check contracts/ToyVault.py
 
       - name: Run Direct Mode tests
         run: python -m pytest tests/direct -q

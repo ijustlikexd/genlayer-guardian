@@ -20,3 +20,18 @@ Lesson for the keeper and the How-to: on Bradbury treat `LEADER_TIMEOUT` as "pol
 ## Batch
 
 `scripts/bradbury-batch.sh` registers vault-b (lodash 4.18.1) and vault-c (internal use) on the same ToyVault, adjudicates the six lodash advisories on vault-a, one on vault-b and three on vault-c, then reads back every verdict and the vault state. Log: `docs/bradbury-batch.log`.
+
+## Batch results
+
+21 real transactions on Bradbury from the owner's wallet (2 deploys, 1 set_guardian, 3 register_target, 14 check, 1 request_resume), all ACCEPTED; one check reported LEADER_TIMEOUT to the CLI but completed on-chain. Total spend 0.008 GEN.
+
+| Target | Incident | Verdict | Matches Studionet v4 |
+|---|---|---|---|
+| vault-a | GHSA-p6mc-m468-83gw | PAUSE | yes |
+| vault-a | GHSA-35jh, r5fr | RESTRICT, prerequisites not met | yes |
+| vault-a | GHSA-29mw, f23m, xxjr | RESTRICT, moderate | yes |
+| vault-b (4.18.1) | GHSA-p6mc | NONE, VERSION_NOT_AFFECTED | yes |
+| vault-c (internal use) | GHSA-p6mc, 35jh, r5fr | RESTRICT, prerequisites not met | yes |
+| vault-c | request_resume | denied STILL_AFFECTED | yes |
+
+ToyVault A: five RESTRICT applied at accepted; vault-c targets share the vault so their RESTRICTs show as `dup` entries. The `on='finalized'` PAUSE for p6mc was still pending at the time of writing (Bradbury finality window is longer than Studionet).

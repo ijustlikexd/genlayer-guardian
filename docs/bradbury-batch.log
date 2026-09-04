@@ -1,3 +1,23 @@
 2026-09-04T17:05:14Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe register_target --args vault-b 0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46 {"target_id":"vault-b","dependencies":[{"ecosystem":"npm","name":"lodash","version":"4.18.1"}],"config":{"accepts_external_json_merge":true}} {"max_action_on_accepted":"RESTRICT","max_action_on_finalized":"PAUSE","min_severity_for_restrict":"moderate","min_severity_for_pause":"high","require_prerequisites_met_for_pause":true} none | ACCEPTED |  |  | 
 2026-09-04T17:05:27Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe register_target --args vault-c 0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46 {"target_id":"vault-c","dependencies":[{"ecosystem":"npm","name":"lodash","version":"4.17.15"}],"config":{"accepts_external_json_merge":false,"uses_functions":["chunk","uniq"],"input_source":"internal constants only","note":"no user-controlled keys reach lodash"}} {"max_action_on_accepted":"RESTRICT","max_action_on_finalized":"PAUSE","min_severity_for_restrict":"moderate","min_severity_for_pause":"high","require_prerequisites_met_for_pause":true} none | ACCEPTED |  |  | 
 2026-09-04T17:05:33Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-a osv GHSA-29mw-wpgm-hmr9 |  |  |  | 
+2026-09-04T17:06:36Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-a osv GHSA-35jh-r3h4-6jhm | ACCEPTED |  |  | 
+2026-09-04T17:07:01Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-a osv GHSA-f23m-r3pf-42rh | ACCEPTED |  |  | 
+2026-09-04T17:07:36Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-a osv GHSA-r5fr-rjxr-66jc | ACCEPTED |  |  | 
+2026-09-04T17:07:59Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-a osv GHSA-xxjr-mmjv-4gpg | ACCEPTED |  |  | 
+2026-09-04T17:08:23Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-b osv GHSA-p6mc-m468-83gw | ACCEPTED |  |  | 
+2026-09-04T17:08:59Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-c osv GHSA-p6mc-m468-83gw | ACCEPTED |  |  | 
+2026-09-04T17:09:29Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-c osv GHSA-35jh-r3h4-6jhm | ACCEPTED |  |  | 
+2026-09-04T17:10:00Z write 0xc1D87D9a1998093fCA37ff460e53883698940FEe check --args vault-c osv GHSA-r5fr-rjxr-66jc | ACCEPTED |  |  | 
+2026-09-04T17:14:06Z verdict vault-a GHSA-p6mc-m468-83gw action:PAUSE,prerequisites_met:true,reason_code:VERSION_IN_RANGE_PREREQ_MET,severity_bucket:high,
+2026-09-04T17:14:17Z verdict vault-a GHSA-35jh-r3h4-6jhm action:RESTRICT,prerequisites_met:false,reason_code:PREREQ_NOT_MET_DOWNGRADED,severity_bucket:high,
+2026-09-04T17:14:23Z verdict vault-a GHSA-f23m-r3pf-42rh action:RESTRICT,prerequisites_met:false,reason_code:SEVERITY_AT_RESTRICT_LEVEL,severity_bucket:moderate,
+2026-09-04T17:14:28Z verdict vault-a GHSA-r5fr-rjxr-66jc action:RESTRICT,prerequisites_met:false,reason_code:PREREQ_NOT_MET_DOWNGRADED,severity_bucket:high,
+2026-09-04T17:14:34Z verdict vault-a GHSA-xxjr-mmjv-4gpg action:RESTRICT,prerequisites_met:false,reason_code:SEVERITY_AT_RESTRICT_LEVEL,severity_bucket:moderate,
+2026-09-04T17:14:39Z verdict vault-b GHSA-p6mc-m468-83gw action:NONE,prerequisites_met:false,reason_code:VERSION_NOT_AFFECTED,severity_bucket:high,
+2026-09-04T17:15:15Z verdict vault-c GHSA-p6mc-m468-83gw action:RESTRICT,prerequisites_met:false,reason_code:PREREQ_NOT_MET_DOWNGRADED,severity_bucket:high,
+2026-09-04T17:15:25Z verdict vault-c GHSA-35jh-r3h4-6jhm action:RESTRICT,prerequisites_met:false,reason_code:PREREQ_NOT_MET_DOWNGRADED,severity_bucket:high,
+2026-09-04T17:15:37Z verdict vault-c GHSA-r5fr-rjxr-66jc action:RESTRICT,prerequisites_met:false,reason_code:PREREQ_NOT_MET_DOWNGRADED,severity_bucket:high,
+2026-09-04T17:15:49Z vault     'GHSA-p6mc-m468-83gw|RESTRICT->RESTRICTED',    'GHSA-35jh-r3h4-6jhm|RESTRICT->RESTRICTED',    'GHSA-f23m-r3pf-42rh|RESTRICT->RESTRICTED',    'GHSA-r5fr-rjxr-66jc|RESTRICT->RESTRICTED',    'GHSA-xxjr-mmjv-4gpg|RESTRICT->RESTRICTED',  mode: 'RESTRICTED',
+2026-09-04T17:15:56Z balance balance:'99.9925676579519029GEN'
+2026-09-04T17:15:56Z done

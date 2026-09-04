@@ -32,7 +32,7 @@ def _apply(case, direct_vm, c):
     else:
         owner, repo = case["source_repo"].split("/")
         adv = gh_adv(**fx)
-        mock_gh(direct_vm, owner, repo, adv)
+        mock_gh(direct_vm, owner, repo, adv, status=case.get("gh_status", 200))
         incident = adv["ghsa_id"]
     if case.get("llm_raw") is not None:
         mock_llm_prereq(direct_vm, None, raw=case["llm_raw"])

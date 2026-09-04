@@ -1,12 +1,25 @@
 {
-  "network": "studionet",
-  "guardian": "0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F",
-  "targets": [
-    { "id": "vault-a", "vault": "0x2a51226330Da8DA06e06a3f3d96a8495C31072bC" },
-    { "id": "vault-c", "vault": "0x962EfdbDb61801A462137452ce05C96B3155A917" },
-    { "id": "vault-d", "vault": "0x322e46dEe027AC4c83a285700c76e41322b0e827" },
-    { "id": "demo-repo", "vault": "0xff1C73E6774320073881C44A7243A0B13eC6C03B" }
-  ],
-  "explorer_tx": "https://studio.genlayer.com/tx/",
+  "default_network": "studionet",
+  "networks": {
+    "studionet": {
+      "chain": "studionet",
+      "guardian": "0xd6Ca44edfD0C8ba7043a2AdD6Ec97597EC17787F",
+      "targets": [
+        { "id": "vault-a", "vault": "0x2a51226330Da8DA06e06a3f3d96a8495C31072bC" },
+        { "id": "vault-c", "vault": "0x962EfdbDb61801A462137452ce05C96B3155A917" },
+        { "id": "vault-d", "vault": "0x322e46dEe027AC4c83a285700c76e41322b0e827" },
+        { "id": "demo-repo", "vault": "0xff1C73E6774320073881C44A7243A0B13eC6C03B" }
+      ]
+    },
+    "testnet-bradbury": {
+      "chain": "testnetBradbury",
+      "guardian": "0xc1D87D9a1998093fCA37ff460e53883698940FEe",
+      "targets": [
+        { "id": "vault-a", "vault": "0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46" },
+        { "id": "vault-b", "vault": "0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46" },
+        { "id": "vault-c", "vault": "0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46" }
+      ]
+    }
+  },
   "repo_url": "https://github.com/ijustlikexd/genlayer-guardian"
 }

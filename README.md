@@ -244,9 +244,9 @@ control. Follow [docs/demo-repo-advisory.md](docs/demo-repo-advisory.md):
 contracts/        Guardian.py, ToyVault.py (GenLayer intelligent contracts)
 keeper/           TypeScript CLI: check / watch / verdict / vault / register / resume
 site/             Static status board (Vite + TS), reads Studionet, no wallet
-tests/direct/     74 Direct Mode tests (gltest), no network required
+tests/direct/     82 Direct Mode tests (gltest), no network required
 tests/fixtures/   recorded real OSV / GitHub responses used by test_real_fixtures.py
-datasets/         cases.json, 32 ground-truth cases (10 PAUSE, 6 RESTRICT, 6 NONE, 10 INSUFFICIENT_EVIDENCE)
+datasets/         cases.json, 40 ground-truth cases (12 PAUSE, 7 RESTRICT, 9 NONE, 12 INSUFFICIENT_EVIDENCE)
 docs/             architecture, manifest guide, Studionet run logs, consistency reports
 scripts/          deployment / registration helpers
 deployments.json  every deployed address by version, on Studionet
@@ -286,7 +286,7 @@ PYTHONUTF8=1 genvm-lint check contracts/Guardian.py contracts/ToyVault.py
 PYTHONUTF8=1 python -m pytest tests/direct -q
 ```
 
-74 Direct Mode tests: ground-truth cases (`datasets/cases.json`, 32 cases), registry and access
+82 Direct Mode tests: ground-truth cases (`datasets/cases.json`, 40 cases), registry and access
 control, ToyVault idempotency/escalation/RESUME, consensus-key behavior, LLM gating, and replay of
 recorded real OSV/GitHub fixtures. No network access and no LLM calls; Direct Mode substitutes
 fixture responses for `gl.nondet.web` and `gl.nondet.exec_prompt`.

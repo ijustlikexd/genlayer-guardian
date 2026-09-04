@@ -615,6 +615,166 @@
     "RESTRICT@accepted",
     "PAUSE@finalized"
    ]
+  },
+  {
+   "id": "L01",
+   "name": "multi-dep manifest, advisory names first dep but only second dep version is affected (query no hit) -> NONE",
+   "source": "osv",
+   "fixture": {
+    "severity": "HIGH"
+   },
+   "query_hit": false,
+   "llm_prereq": null,
+   "manifest": {
+    "dependencies": [
+     {
+      "ecosystem": "npm",
+      "name": "lodash",
+      "version": "4.18.1"
+     },
+     {
+      "ecosystem": "npm",
+      "name": "express",
+      "version": "4.18.2"
+     }
+    ]
+   },
+   "expect": {
+    "applicable": false,
+    "action": "NONE",
+    "reason_code": "VERSION_NOT_AFFECTED"
+   },
+   "expect_messages": []
+  },
+  {
+   "id": "L02",
+   "name": "policy pause threshold critical: high severity stays RESTRICT without asking LLM",
+   "source": "osv",
+   "fixture": {
+    "severity": "HIGH"
+   },
+   "query_hit": true,
+   "llm_prereq": null,
+   "policy": {
+    "min_severity_for_pause": "critical"
+   },
+   "expect": {
+    "applicable": true,
+    "severity_bucket": "high",
+    "action": "RESTRICT",
+    "reason_code": "SEVERITY_AT_RESTRICT_LEVEL"
+   },
+   "expect_messages": [
+    "RESTRICT@accepted"
+   ]
+  },
+  {
+   "id": "L03",
+   "name": "policy restrict threshold high: moderate -> NONE",
+   "source": "osv",
+   "fixture": {
+    "severity": "MODERATE"
+   },
+   "query_hit": true,
+   "llm_prereq": null,
+   "policy": {
+    "min_severity_for_restrict": "high",
+    "min_severity_for_pause": "high"
+   },
+   "expect": {
+    "action": "NONE",
+    "reason_code": "BELOW_RESTRICT_THRESHOLD"
+   },
+   "expect_messages": []
+  },
+  {
+   "id": "L04",
+   "name": "OSV severity list with non-CVSS3 vector only -> bucket unknown -> LLM bucket",
+   "source": "osv",
+   "fixture": {
+    "severity": null,
+    "cvss": "CVSS:2.0/AV:N/AC:L/Au:N/C:P/I:P/A:P"
+   },
+   "query_hit": true,
+   "llm_prereq": true,
+   "llm_bucket": "critical",
+   "expect": {
+    "severity_bucket": "critical",
+    "action": "PAUSE"
+   },
+   "expect_messages": [
+    "RESTRICT@accepted",
+    "PAUSE@finalized"
+   ]
+  },
+  {
+   "id": "L05",
+   "name": "OSV vuln 500 -> not found (no body) -> INSUFFICIENT",
+   "source": "osv",
+   "fixture": {
+    "severity": "HIGH"
+   },
+   "vuln_status": 500,
+   "query_hit": true,
+   "llm_prereq": null,
+   "expect": {
+    "action": "INSUFFICIENT_EVIDENCE",
+    "reason_code": "ADVISORY_NOT_FOUND"
+   },
+   "expect_messages": []
+  },
+  {
+   "id": "J07",
+   "name": "github advisory names a different package than the manifest -> NONE",
+   "source": "github_repo_advisory",
+   "source_repo": "demo-org/demo-vault",
+   "fixture": {
+    "severity": "critical",
+    "name": "lodash-es"
+   },
+   "llm_prereq": null,
+   "expect": {
+    "applicable": false,
+    "action": "NONE",
+    "reason_code": "PACKAGE_NOT_DEPLOYED"
+   },
+   "expect_messages": []
+  },
+  {
+   "id": "J08",
+   "name": "github advisory 404 (wrong id) -> INSUFFICIENT",
+   "source": "github_repo_advisory",
+   "source_repo": "demo-org/demo-vault",
+   "fixture": {
+    "severity": "high"
+   },
+   "gh_status": 404,
+   "llm_prereq": null,
+   "expect": {
+    "action": "INSUFFICIENT_EVIDENCE",
+    "reason_code": "ADVISORY_NOT_FOUND"
+   },
+   "expect_messages": []
+  },
+  {
+   "id": "J09",
+   "name": "github exact-version range equals deployed version, critical, prereq met -> PAUSE",
+   "source": "github_repo_advisory",
+   "source_repo": "demo-org/demo-vault",
+   "fixture": {
+    "severity": "critical",
+    "rng": "4.17.15"
+   },
+   "llm_prereq": true,
+   "expect": {
+    "applicable": true,
+    "severity_bucket": "critical",
+    "action": "PAUSE"
+   },
+   "expect_messages": [
+    "RESTRICT@accepted",
+    "PAUSE@finalized"
+   ]
   }
  ]
 }

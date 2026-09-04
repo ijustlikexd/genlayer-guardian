@@ -14,6 +14,15 @@
           Protocols already know their dependencies. Guardian makes public security incidents
           enforceable against them.
         </p>
+        <div class="network-switcher" role="group" aria-label="Select network">
+          <button type="button" id="network-btn-studionet" class="network-btn" data-network="studionet">
+            Studionet
+          </button>
+          <button type="button" id="network-btn-testnet-bradbury" class="network-btn" data-network="testnet-bradbury">
+            Bradbury testnet
+          </button>
+        </div>
+        <p class="muted network-note">Bradbury testnet reads are slower than Studionet (longer leader/finality windows).</p>
         <dl class="meta">
           <div><dt>Network</dt><dd id="network-value">loading...</dd></div>
           <div><dt>Guardian address</dt><dd id="guardian-value" class="mono">loading...</dd></div>
@@ -67,10 +76,10 @@
       </section>
 
       <section aria-labelledby="consistency-heading">
-        <h2 id="consistency-heading">Consistency (studionet run)</h2>
+        <h2 id="consistency-heading">Consistency (v2 / v3 / v4 / Bradbury)</h2>
         <p class="muted">
           Static snapshot committed alongside the site; not a live query. Source:
-          <code>docs/consistency-report.md</code>.
+          <code id="consistency-source">docs/consistency-report-v2.md, docs/consistency-report-v3.md</code>.
         </p>
         <div id="consistency-panel"></div>
       </section>

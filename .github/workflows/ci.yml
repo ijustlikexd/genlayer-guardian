@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache GenVM SDK tarball
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/gltest-direct
+          key: genvm-universal-v0.2.16
+
+      - name: Pre-cache GenVM SDK tarball
+        run: |
+          mkdir -p ~/.cache/gltest-direct
+          if [ ! -f ~/.cache/gltest-direct/genvm-universal-v0.2.16.tar.xz ]; then
+            curl -L -o ~/.cache/gltest-direct/genvm-universal-v0.2.16.tar.xz \
+              https://github.com/genlayerlabs/genvm/releases/download/v0.2.16/genvm-universal.tar.xz
+          fi
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install git+https://github.com/genlayerlabs/genvm-linter@main
+
+      - name: Lint contracts
+        run: genvm-lint check contracts/Guardian.py contracts/ToyVault.py
+
+      - name: Run Direct Mode tests
+        run: python -m pytest tests/direct -q
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Typecheck keeper and root
+        run: npx tsc --noEmit
+
+      - name: Typecheck site
+        run: npx tsc --noEmit -p site
+
+      - name: Build site
+        run: npx vite build site

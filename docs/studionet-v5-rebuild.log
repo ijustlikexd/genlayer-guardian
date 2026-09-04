@@ -27,3 +27,17 @@
 == env
 GUARDIAN_ADDRESS=0x02d8b2dd887B774E9d518Fcb223d664E33cf4608
 == checks
+vault-a osv GHSA-p6mc-m468-83gw -> "action": "PAUSE" "reason_code": "VERSION_IN_RANGE_PREREQ_MET" 
+vault-b osv GHSA-p6mc-m468-83gw -> "action": "NONE" "reason_code": "VERSION_NOT_AFFECTED" 
+vault-c osv GHSA-p6mc-m468-83gw -> "action": "RESTRICT" "reason_code": "PREREQ_NOT_MET_DOWNGRADED" 
+demo-repo github_repo_advisory GHSA-m9f4-gp45-2v27 -> "action": "PAUSE" "reason_code": "VERSION_IN_RANGE_PREREQ_MET" 
+vault-a osv GHSA-35jh-r3h4-6jhm -> "action": "RESTRICT" "reason_code": "PREREQ_NOT_MET_DOWNGRADED" 
+== resume-all vault-a after upgrade to 4.18.1
+"event":"manifest_updated"
+{"ts":"2026-09-04T19:09:19.756Z","event":"resume_all_requested","target_id":"vault-a","tx_hash":"0x9e833586ae6ea631b3f783a57eb7b243766cf3310ea28b4fe37ab5ec6087d1cc","still_open":[]}
+== vault states
+vault-a 0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9 "mode":"NORMAL"
+vault-b 0x0A43d9217aB51103841d13977222bCa214b63938 "mode":"NORMAL"
+vault-c 0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083 "mode":"RESTRICTED"
+demo-repo 0xd66234a30138E48Dd14ae6D512c467b3BF219122 "mode":"PAUSED"
+done 19:10:38

@@ -99,3 +99,20 @@ Guardian v4 adds interpretation rules to the prompt: judge only the advisory's p
 | GHSA-m9f4-gp45-2v27 (demo repo, prerequisite stated in prose, no function names) | 1 | PAUSE, prerequisites_met=true |
 
 The rules removed the r5fr instability without flipping the true-positive cases. Current production Guardian is v4; site/config.json and .env point to it.
+
+## Day 9 (2026-09-05): Studionet v5 rebuilt with one command
+
+`npx tsx keeper/cli.ts deploy-all studionet` deployed Guardian v5 `0x02d8b2dd887B774E9d518Fcb223d664E33cf4608`, one ToyVault per target (vault-a `0x8A5d…b6A9`, vault-b `0x0A43…3938`, vault-c `0x9Ca3…9083`, demo-repo `0xd662…9122`), set guardians and registered all four targets in 90 seconds, then rewrote deployments.json (current/history) and the site config.
+
+v5 adds `request_resume_all(target_id)`: one transaction re-adjudicates every open incident. Run log `docs/studionet-v5-rebuild.log`:
+
+| Step | Result |
+|---|---|
+| vault-a p6mc | PAUSE |
+| vault-b p6mc | NONE (4.18.1) |
+| vault-c p6mc | RESTRICT (prerequisites not met) |
+| demo-repo GHSA-m9f4 (GitHub repo advisory) | PAUSE |
+| vault-a 35jh | RESTRICT |
+| update-manifest vault-a to 4.18.1, then `resume-all` | both open incidents resumed in one tx, `still_open: []`, vault NORMAL |
+
+End state: vault-a NORMAL, vault-b NORMAL, vault-c RESTRICTED, demo-repo PAUSED. The site reads this environment.

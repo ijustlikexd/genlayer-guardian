@@ -196,6 +196,14 @@ async function loadConsistency(): Promise<ConsistencySnapshot> {
 
 function resolveChain(name: string): GenLayerChain {
   const table = chains as unknown as Record<string, GenLayerChain>;
+  if (name === "studioNext") {
+    return {
+      ...table.studionet,
+      id: 61997,
+      name: "GenLayer Studio Next",
+      rpcUrls: { default: { http: ["https://studio-dev.genlayer.com/api"] } },
+    } as GenLayerChain;
+  }
   // config.json's "chain" field uses the genlayer-js/chains export names
   // (localnet, studionet, testnetAsimov, testnetBradbury).
   const chain = table[name];
@@ -359,8 +367,9 @@ function renderHeader(cfg: SiteConfig, networkKey: string): void {
 function setupNetworkSwitcher(cfg: SiteConfig): void {
   for (const btn of Array.from(document.querySelectorAll<HTMLButtonElement>(".network-btn"))) {
     const key = btn.dataset.network;
-    if (!key || !cfg.networks[key]) {
+    if (!key || !cfg.networks[key] || !cfg.networks[key].guardian) {
       btn.disabled = true;
+      btn.title = "not deployed yet";
       continue;
     }
     btn.addEventListener("click", () => {

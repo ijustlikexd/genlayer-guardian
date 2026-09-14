@@ -26,11 +26,22 @@ import type {
 import { TransactionStatus } from "genlayer-js/types";
 import { readFileSync } from "fs";
 
-export type NetworkName = "localnet" | "studionet" | "testnet-asimov" | "testnet-bradbury";
+export type NetworkName = "localnet" | "studionet" | "studio-next" | "testnet-asimov" | "testnet-bradbury";
+
+// Studio Next (a.k.a. Studio Dev): same Studio JSON-RPC surface as Studionet, different
+// deployment. chain id 61997 (eth_chainId 0xf22d), RPC https://studio-dev.genlayer.com/api.
+export const studioNext: GenLayerChain = {
+  ...studionet,
+  id: 61997,
+  name: "GenLayer Studio Next",
+  rpcUrls: { default: { http: ["https://studio-dev.genlayer.com/api"] } },
+  blockExplorers: { default: { name: "Studio Next Explorer", url: "https://explorer-studio-next.genlayer.com" } },
+} as GenLayerChain;
 
 const CHAIN_BY_NAME: Record<NetworkName, GenLayerChain> = {
   localnet: localnet,
   studionet: studionet,
+  "studio-next": studioNext,
   "testnet-asimov": testnetAsimov,
   "testnet-bradbury": testnetBradbury,
 };

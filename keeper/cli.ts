@@ -350,7 +350,7 @@ function updateSiteConfig(network: string, guardian: string, vaults: Record<stri
   const entry = config.networks[network] || {};
   entry.guardian = guardian;
   entry.targets = Object.entries(vaults).map(([id, vault]) => ({ id, vault }));
-  if (!entry.chain) entry.chain = network === "testnet-bradbury" ? "testnetBradbury" : network;
+  if (!entry.chain) entry.chain = network === "testnet-bradbury" ? "testnetBradbury" : network === "studio-next" ? "studioNext" : network;
   config.networks[network] = entry;
   writeFileSync(SITE_CONFIG_PATH, JSON.stringify(config, null, 2) + "\n");
 }

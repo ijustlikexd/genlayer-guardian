@@ -1,0 +1,18 @@
+== deploy-all studio-next 2026-09-14T14:47:19Z
+Error: Transaction reverted: EVM tx 0x310a189f288a97d5d6e421d226e501177b261ca01b03659bd19c03c120c91afb to consensus contract 0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575 was reverted.
+    at sendWithEncodedData (file:///D:/project/GenLayer/guardian/node_modules/genlayer-js/dist/index.js:1138:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async _sendTransaction (file:///D:/project/GenLayer/guardian/node_modules/genlayer-js/dist/index.js:1192:12)
+    at async Object.deployContract (D:\project\GenLayer\guardian\keeper\client.ts:348:22)
+    at async cmdDeployAll (D:\project\GenLayer\guardian\keeper\cli.ts:396:28)
+== retry deploy-all studio-next 2026-09-14T14:48:34Z after sim_fundAccount
+Error: Transaction reverted: EVM tx 0xbdaeb98ed1ae1db5170a3ac95f4cd3c3d8cda38740a3c8d65c8fc24e9edc059e to consensus contract 0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575 was reverted.
+    at sendWithEncodedData (file:///D:/project/GenLayer/guardian/node_modules/genlayer-js/dist/index.js:1138:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async _sendTransaction (file:///D:/project/GenLayer/guardian/node_modules/genlayer-js/dist/index.js:1192:12)
+    at async Object.deployContract (D:\project\GenLayer\guardian\keeper\client.ts:348:22)
+    at async cmdDeployAll (D:\project\GenLayer\guardian\keeper\cli.ts:396:28)
+== studio-next deploy-all 2026-09-14T14:58:04Z (scripts/studio-next/next.mjs, genlayer-js 2.0.0-rc.1)
+deploy contracts/Guardian.py rolled back on-chain: invalid_contract runner malformed
+== probe 1 2026-09-14T15:04:58Z
+deploy contracts/ToyVault.py rolled back on-chain: invalid_contract runner malformed

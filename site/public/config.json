@@ -40,6 +40,11 @@
           "vault": "0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46"
         }
       ]
+    },
+    "studio-next": {
+      "chain": "studioNext",
+      "guardian": "",
+      "targets": []
     }
   },
   "repo_url": "https://github.com/ijustlikexd/genlayer-guardian"

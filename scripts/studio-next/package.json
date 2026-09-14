@@ -1,0 +1,7 @@
+{
+  "name": "guardian-studio-next",
+  "private": true,
+  "type": "module",
+  "description": "Deploys and drives Guardian on GenLayer Studio Next (chain 61997) with genlayer-js 2.0.0-rc.1, which knows the fee-aware ConsensusMain there.",
+  "dependencies": { "genlayer-js": "2.0.0-rc.1" }
+}

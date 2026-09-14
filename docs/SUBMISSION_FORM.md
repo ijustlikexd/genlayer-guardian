@@ -1,39 +1,54 @@
-|#| |A|g|e|n|t| |T|a|n|k| |f|o|r|m|,| |f|i|e|l|d| |b|y| |f|i|e|l|d| |(|p|a|s|t|e|-|r|e|a|d|y|)|
-|
-|F|o|r|m|:| |h|t|t|p|s|:|/|/|p|o|r|t|a|l|.|g|e|n|l|a|y|e|r|.|f|o|u|n|d|a|t|i|o|n|/|a|g|e|n|t|-|t|a|n|k| |(|d|e|a|d|l|i|n|e| |1|7| |S|e|p| |2|0|2|6| |1|5|:|3|0| |U|T|C|)|
-|
-|*|*|0|0| |T|r|a|c|k|:|*|*| |A|u|t|o|n|o|m|o|u|s| |P|r|o|t|o|c|o|l|s|
-|
-|*|*|0|1| |G|i|t|H|u|b| |r|e|p|o|s|i|t|o|r|y|:|*|*| |h|t|t|p|s|:|/|/|g|i|t|h|u|b|.|c|o|m|/|i|j|u|s|t|l|i|k|e|x|d|/|g|e|n|l|a|y|e|r|-|g|u|a|r|d|i|a|n|
-|
-|*|*|0|3| |I|d|e|n|t|i|t|y|:|*|*| |P|r|o|j|e|c|t| |n|a|m|e| |`|G|u|a|r|d|i|a|n|`|.| |L|o|g|o|:| |`|d|o|c|s|/|l|o|g|o|-|g|u|a|r|d|i|a|n|.|p|n|g|`| |(|5|1|2|x|5|1|2|)|.|
-|
-|*|*|0|4| |P|r|o|j|e|c|t| |s|u|m|m|a|r|y| |(|<|=|1|8|0| |c|h|a|r|s|)|:|*|*|
-|I|n|t|e|l|l|i|g|e|n|t| |C|o|n|t|r|a|c|t| |t|h|a|t| |a|d|j|u|d|i|c|a|t|e|s| |p|u|b|l|i|c| |s|e|c|u|r|i|t|y| |a|d|v|i|s|o|r|i|e|s| |a|g|a|i|n|s|t| |a| |p|r|o|t|o|c|o|l|'|s| |d|e|c|l|a|r|e|d| |d|e|p|e|n|d|e|n|c|i|e|s| |a|n|d| |e|n|f|o|r|c|e|s| |i|t|s| |p|r|e|-|c|o|m|m|i|t|t|e|d| |p|a|u|s|e| |p|o|l|i|c|y| |i|n| |t|w|o| |f|i|n|a|l|i|t|y| |s|t|a|g|e|s|.|
-|
-|*|*|0|5| |P|r|o|j|e|c|t| |o|v|e|r|v|i|e|w| |(|<|=|1|0|0|0| |c|h|a|r|s|)|:|*|*|
-|A|n| |e|m|e|r|g|e|n|c|y| |p|a|u|s|e| |t|o|d|a|y| |i|s| |a|n| |a|d|m|i|n| |k|e|y| |o|r| |a| |b|o|t| |o|n| |a| |C|V|S|S| |s|c|o|r|e|.| |G|u|a|r|d|i|a|n| |r|e|p|l|a|c|e|s| |b|o|t|h|.| |A| |p|r|o|t|o|c|o|l| |r|e|g|i|s|t|e|r|s| |a| |m|a|n|i|f|e|s|t| |(|d|e|p|e|n|d|e|n|c|i|e|s|,| |v|e|r|s|i|o|n|s|,| |e|x|p|l|o|i|t|-|r|e|l|e|v|a|n|t| |c|o|n|f|i|g|)| |a|n|d| |a| |p|o|l|i|c|y| |(|N|O|N|E|/|R|E|S|T|R|I|C|T|/|P|A|U|S|E| |t|h|r|e|s|h|o|l|d|s|)|.| |A| |p|e|r|m|i|s|s|i|o|n|l|e|s|s| |k|e|e|p|e|r| |s|u|b|m|i|t|s| |c|h|e|c|k|(|t|a|r|g|e|t|,| |s|o|u|r|c|e|,| |a|d|v|i|s|o|r|y|_|i|d|)| |w|h|e|n| |O|S|V| |o|r| |a| |G|i|t|H|u|b| |r|e|p|o|s|i|t|o|r|y| |a|d|v|i|s|o|r|y| |a|p|p|e|a|r|s|.| |I|n|s|i|d|e| |c|o|n|s|e|n|s|u|s| |e|v|e|r|y| |v|a|l|i|d|a|t|o|r| |f|e|t|c|h|e|s| |t|h|e| |a|d|v|i|s|o|r|y| |i|t|s|e|l|f|:| |v|e|r|s|i|o|n|-|r|a|n|g|e| |m|a|t|c|h|,| |p|a|c|k|a|g|e| |i|d|e|n|t|i|t|y| |a|n|d| |C|V|S|S| |s|c|o|r|i|n|g| |a|r|e| |d|e|t|e|r|m|i|n|i|s|t|i|c|;| |t|h|e| |L|L|M| |i|s| |a|s|k|e|d| |e|x|a|c|t|l|y| |o|n|e| |b|o|o|l|e|a|n|,| |w|h|e|t|h|e|r| |t|h|e| |a|d|v|i|s|o|r|y|'|s| |e|x|p|l|o|i|t| |p|r|e|r|e|q|u|i|s|i|t|e|s| |a|r|e| |m|e|t| |b|y| |t|h|e| |d|e|c|l|a|r|e|d| |c|o|n|f|i|g|,| |a|n|d| |o|n|l|y| |w|h|e|n| |s|e|v|e|r|i|t|y| |r|e|a|c|h|e|s| |t|h|e| |p|a|u|s|e| |t|h|r|e|s|h|o|l|d|.| |V|a|l|i|d|a|t|o|r|s| |a|g|r|e|e| |o|n| |o|u|t|c|o|m|e| |e|n|u|m|s| |o|n|l|y|.| |T|h|e| |t|a|r|g|e|t| |r|e|c|e|i|v|e|s| |R|E|S|T|R|I|C|T| |o|n| |a|c|c|e|p|t|a|n|c|e| |(|b|o|u|n|d|e|d|,| |r|e|v|e|r|s|i|b|l|e|)| |a|n|d| |P|A|U|S|E| |o|n| |f|i|n|a|l|i|z|a|t|i|o|n|;| |R|E|S|U|M|E| |r|e|q|u|i|r|e|s| |a| |f|r|e|s|h| |a|d|j|u|d|i|c|a|t|i|o|n| |o|f| |t|h|e| |n|e|w| |m|a|n|i|f|e|s|t|.| |L|i|v|e| |o|n| |S|t|u|d|i|o|n|e|t| |a|n|d| |B|r|a|d|b|u|r|y| |w|i|t|h| |r|e|a|l| |O|S|V|/|G|i|t|H|u|b| |d|a|t|a|,| |8|5| |t|e|s|t|s|,| |4|0| |g|r|o|u|n|d|-|t|r|u|t|h| |c|a|s|e|s|,| |v|a|l|i|d|a|t|o|r| |d|i|s|a|g|r|e|e|m|e|n|t| |m|e|a|s|u|r|e|d| |f|r|o|m| |1|8| |v|o|t|e|s| |t|o| |0| |o|v|e|r| |9|0| |r|e|a|l| |t|r|a|n|s|a|c|t|i|o|n|s|.|
-|
-|*|*|0|6| |D|e|m|o| |v|i|d|e|o|:|*|*| |h|t|t|p|s|:|/|/|y|o|u|t|u|.|b|e|/|l|0|z|F|-|P|j|e|-|x|Q|
-|
-|*|*|0|7| |H|o|w|-|t|o| |(|f|o|r|m| |h|a|s| |H|e|a|d|i|n|g| |+| |I|n|s|t|r|u|c|t|i|o|n| |p|e|r| |s|t|e|p|;| |a|d|d| |6| |s|t|e|p|s|)|:|*|*|
-|
-||| |#| ||| |H|e|a|d|i|n|g| ||| |I|n|s|t|r|u|c|t|i|o|n| |||
-|||-|-|-|||-|-|-|||-|-|-|||
-||| |1| ||| |O|p|e|n| |t|h|e| |s|t|a|t|u|s| |b|o|a|r|d| ||| |O|p|e|n| |h|t|t|p|s|:|/|/|i|j|u|s|t|l|i|k|e|x|d|.|g|i|t|h|u|b|.|i|o|/|g|e|n|l|a|y|e|r|-|g|u|a|r|d|i|a|n|/| |w|i|t|h| |S|t|u|d|i|o|n|e|t| |s|e|l|e|c|t|e|d|.| |N|o| |w|a|l|l|e|t| |n|e|e|d|e|d|.| |T|a|r|g|e|t|s| |s|h|o|w| |v|a|u|l|t|-|a| |P|A|U|S|E|D|,| |v|a|u|l|t|-|c| |R|E|S|T|R|I|C|T|E|D|,| |v|a|u|l|t|-|b| |N|O|R|M|A|L|,| |d|e|m|o|-|r|e|p|o| |R|E|S|T|R|I|C|T|E|D|.| |||
-||| |2| ||| |S|a|m|e| |a|d|v|i|s|o|r|y|,| |t|h|r|e|e| |o|u|t|c|o|m|e|s| ||| |C|l|i|c|k| |v|a|u|l|t|-|a|:| |r|o|w| |G|H|S|A|-|p|6|m|c|-|m|4|6|8|-|8|3|g|w| |s|h|o|w|s| |a|p|p|l|i|c|a|b|l|e| |t|r|u|e|,| |h|i|g|h|,| |p|r|e|r|e|q|u|i|s|i|t|e|s| |m|e|t| |t|r|u|e|,| |a|c|t|i|o|n| |P|A|U|S|E|.| |C|l|i|c|k| |v|a|u|l|t|-|c|:| |s|a|m|e| |a|d|v|i|s|o|r|y|,| |p|r|e|r|e|q|u|i|s|i|t|e|s| |m|e|t| |f|a|l|s|e|,| |R|E|S|T|R|I|C|T| |(|c|o|n|f|i|g| |s|a|y|s| |i|n|t|e|r|n|a|l| |c|o|n|s|t|a|n|t|s| |o|n|l|y|)|.| |C|l|i|c|k| |v|a|u|l|t|-|b|:| |N|O|N|E|,| |v|e|r|s|i|o|n| |4|.|1|8|.|1| |i|s| |p|a|t|c|h|e|d|.| |||
-||| |3| ||| |R|e|a|d| |t|h|e| |e|v|i|d|e|n|c|e| |y|o|u|r|s|e|l|f| ||| |O|p|e|n| |t|h|e| |O|S|V| |l|i|n|k| |o|n| |t|h|e| |v|a|u|l|t|-|a| |r|o|w|:| |a|f|f|e|c|t|e|d| |r|a|n|g|e| |<| |4|.|1|7|.|1|9|,| |m|a|n|i|f|e|s|t| |s|a|y|s| |4|.|1|7|.|1|5| |a|n|d| |u|s|e|s| |s|e|t| |/| |z|i|p|O|b|j|e|c|t|D|e|e|p|.| |T|h|e| |v|e|r|d|i|c|t| |m|a|t|c|h|e|s| |t|h|e| |p|u|b|l|i|c| |d|a|t|a|,| |n|o|t| |a| |C|V|S|S| |b|o|t|.| |||
-||| |4| ||| |H|u|m|a|n|-|p|u|b|l|i|s|h|e|d| |a|d|v|i|s|o|r|y| |t|o| |P|A|U|S|E|,| |t|h|e|n| |R|E|S|U|M|E| ||| |I|n| |"|L|o|o|k| |u|p| |a| |v|e|r|d|i|c|t| |k|e|y|"| |p|a|s|t|e| |d|e|m|o|-|r|e|p|o|\|||g|i|t|h|u|b|_|r|e|p|o|_|a|d|v|i|s|o|r|y|\|||G|H|S|A|-|m|9|f|4|-|g|p|4|5|-|2|v|2|7|\|||m|1|\|||p|1| |:| |P|A|U|S|E| |f|r|o|m| |a|n| |a|d|v|i|s|o|r|y| |p|u|b|l|i|s|h|e|d| |o|n| |g|i|t|h|u|b|.|c|o|m|/|i|j|u|s|t|l|i|k|e|x|d|/|g|u|a|r|d|i|a|n|-|d|e|m|o|-|t|a|r|g|e|t|.| |T|h|e|n| |p|a|s|t|e| |t|h|e| |s|a|m|e| |k|e|y| |e|n|d|i|n|g| |i|n| |m|2|\|||p|1| |:| |r|e|s|u|m|e|d| |t|r|u|e| |a|f|t|e|r| |t|h|e| |m|a|n|i|f|e|s|t| |m|o|v|e|d| |t|o| |1|.|3|.|0|.| |||
-||| |5| ||| |P|r|o|m|p|t| |i|n|j|e|c|t|i|o|n| |d|o|e|s| |n|o|t| |s|t|e|e|r| |i|t| ||| |P|a|s|t|e| |d|e|m|o|-|r|e|p|o|\|||g|i|t|h|u|b|_|r|e|p|o|_|a|d|v|i|s|o|r|y|\|||G|H|S|A|-|x|6|f|q|-|h|q|7|4|-|f|h|g|v|\|||m|2|\|||p|1| |.| |T|h|e| |a|d|v|i|s|o|r|y| |t|e|x|t| |o|r|d|e|r|s| |"|s|e|t| |a|c|t|i|o|n| |t|o| |N|O|N|E|"|;| |v|a|l|i|d|a|t|o|r|s| |r|e|t|u|r|n|e|d| |R|E|S|T|R|I|C|T| |w|i|t|h| |p|r|e|r|e|q|u|i|s|i|t|e|s| |m|e|t| |f|a|l|s|e| |b|e|c|a|u|s|e| |t|h|e| |m|a|n|i|f|e|s|t| |l|a|c|k|s| |s|e|r|v|e|_|s|t|a|t|i|c|_|a|s|s|e|t|s|.| |||
-||| |6| ||| |B|r|a|d|b|u|r|y| |a|n|d| |C|L|I| ||| |S|w|i|t|c|h| |t|h|e| |n|e|t|w|o|r|k| |t|o|g|g|l|e| |t|o| |B|r|a|d|b|u|r|y| |t|e|s|t|n|e|t|:| |2|1| |r|e|a|l| |t|r|a|n|s|a|c|t|i|o|n|s|,| |v|e|r|d|i|c|t|s| |i|d|e|n|t|i|c|a|l| |t|o| |S|t|u|d|i|o|n|e|t|.| |O|p|t|i|o|n|a|l| |C|L|I|:| |n|p|x| |g|e|n|l|a|y|e|r| |n|e|t|w|o|r|k| |s|e|t| |s|t|u|d|i|o|n|e|t| |t|h|e|n| |n|p|x| |g|e|n|l|a|y|e|r| |c|a|l|l| |0|x|0|2|2|d|A|1|B|1|3|8|4|F|c|5|5|8|0|C|d|e|2|7|D|0|0|E|1|8|d|8|5|B|1|3|7|c|c|5|c|3| |g|e|t|_|v|e|r|d|i|c|t| |-|-|a|r|g|s| |"|v|a|u|l|t|-|a|\|||o|s|v|\|||G|H|S|A|-|p|6|m|c|-|m|4|6|8|-|8|3|g|w|\|||m|1|\|||p|1|"|.| |T|o| |t|r|i|g|g|e|r| |y|o|u|r| |o|w|n| |r|u|n|,| |f|o|l|l|o|w| |d|o|c|s|/|d|e|m|o|-|r|e|p|o|-|a|d|v|i|s|o|r|y|.|m|d|.| |||
-|
-|*|*|0|8| |R|e|v|i|e|w| |v|e|r|i|f|i|c|a|t|i|o|n| |(|<|=|5|0|0| |c|h|a|r|s|)|:|*|*|
-|S|a|m|e| |l|o|d|a|s|h| |a|d|v|i|s|o|r|y| |y|i|e|l|d|s| |t|h|r|e|e| |d|i|f|f|e|r|e|n|t| |o|u|t|c|o|m|e|s| |f|r|o|m| |t|h|e| |s|a|m|e| |v|a|l|i|d|a|t|o|r|s|:| |v|a|u|l|t|-|a| |P|A|U|S|E| |(|u|s|e|s| |t|h|e| |v|u|l|n|e|r|a|b|l|e| |f|u|n|c|t|i|o|n|s| |o|n| |u|n|t|r|u|s|t|e|d| |i|n|p|u|t|)|,| |v|a|u|l|t|-|c| |R|E|S|T|R|I|C|T| |(|p|r|e|r|e|q|u|i|s|i|t|e| |n|o|t| |m|e|t|)|,| |v|a|u|l|t|-|b| |N|O|N|E| |(|p|a|t|c|h|e|d|)|.| |R|E|S|T|R|I|C|T| |a|p|p|e|a|r|s| |a|t| |a|c|c|e|p|t|a|n|c|e|,| |P|A|U|S|E| |o|n|l|y| |a|f|t|e|r| |f|i|n|a|l|i|t|y|.| |A| |p|r|o|m|p|t|-|i|n|j|e|c|t|e|d| |a|d|v|i|s|o|r|y| |d|e|m|a|n|d|i|n|g| |N|O|N|E| |s|t|i|l|l| |r|e|t|u|r|n|s| |R|E|S|T|R|I|C|T|.| |R|e|s|u|m|e| |i|s| |g|r|a|n|t|e|d| |o|n|l|y| |a|f|t|e|r| |r|e|-|a|d|j|u|d|i|c|a|t|i|o|n| |a|g|a|i|n|s|t| |t|h|e| |u|p|g|r|a|d|e|d| |m|a|n|i|f|e|s|t|.| |E|v|e|r|y| |v|e|r|d|i|c|t| |i|s| |r|e|a|d|a|b|l|e| |o|n|-|c|h|a|i|n| |b|y| |k|e|y|.|
-|
-|*|*|0|9| |P|r|o|j|e|c|t| |l|i|n|k|s|:|*|*|
-|W|e|b|s|i|t|e| |h|t|t|p|s|:|/|/|i|j|u|s|t|l|i|k|e|x|d|.|g|i|t|h|u|b|.|i|o|/|g|e|n|l|a|y|e|r|-|g|u|a|r|d|i|a|n|/|
-|G|i|t|H|u|b| |h|t|t|p|s|:|/|/|g|i|t|h|u|b|.|c|o|m|/|i|j|u|s|t|l|i|k|e|x|d|/|g|e|n|l|a|y|e|r|-|g|u|a|r|d|i|a|n|
-|C|o|n|t|r|a|c|t| |l|i|n|k|s| |(|0|6|)|:|
-|1|.| |h|t|t|p|s|:|/|/|e|x|p|l|o|r|e|r|-|s|t|u|d|i|o|.|g|e|n|l|a|y|e|r|.|c|o|m|/|a|d|d|r|e|s|s|/|0|x|0|2|2|d|A|1|B|1|3|8|4|F|c|5|5|8|0|C|d|e|2|7|D|0|0|E|1|8|d|8|5|B|1|3|7|c|c|5|c|3| | |(|S|t|u|d|i|o|n|e|t| |G|u|a|r|d|i|a|n| |v|6|)|
-|2|.| |h|t|t|p|s|:|/|/|e|x|p|l|o|r|e|r|-|b|r|a|d|b|u|r|y|.|g|e|n|l|a|y|e|r|.|c|o|m|/|a|d|d|r|e|s|s|/|0|x|c|1|D|8|7|D|9|a|1|9|9|8|0|9|3|f|C|A|3|7|f|f|4|6|0|e|5|3|8|8|3|6|9|8|9|4|0|F|E|e| | |(|B|r|a|d|b|u|r|y| |G|u|a|r|d|i|a|n|)|
-|3|.| |h|t|t|p|s|:|/|/|e|x|p|l|o|r|e|r|-|b|r|a|d|b|u|r|y|.|g|e|n|l|a|y|e|r|.|c|o|m|/|a|d|d|r|e|s|s|/|0|x|9|1|b|9|7|b|3|7|4|b|c|9|5|c|4|b|C|A|A|1|A|F|7|f|B|5|6|E|0|a|5|0|c|2|4|d|5|E|4|6| | |(|B|r|a|d|b|u|r|y| |T|o|y|V|a|u|l|t|)|
+# Agent Tank form, field by field (paste-ready)
+
+Form: https://portal.genlayer.foundation/agent-tank (deadline 17 Sep 2026 15:30 UTC)
+
+**00 Track:** Autonomous Protocols
+
+**01 GitHub repository:** https://github.com/ijustlikexd/genlayer-guardian
+
+**03 Identity:** Project name `Guardian`. Logo: `docs/logo-guardian.png` (512x512).
+
+**04 Project summary (<=180 chars):**
+Intelligent Contract that adjudicates public security advisories against a protocol's declared dependencies and enforces its pre-committed pause policy in two finality stages.
+
+**05 Project overview (<=1000 chars):**
+An emergency pause today is an admin key or a bot on a CVSS score. Guardian replaces both. A protocol registers a manifest (dependencies, versions, exploit-relevant config) and a policy (NONE/RESTRICT/PAUSE thresholds). A permissionless keeper submits check(target, source, advisory_id) when OSV or a GitHub repository advisory appears. Inside consensus every validator fetches the advisory itself: version-range match, package identity and CVSS scoring are deterministic; the LLM is asked exactly one boolean, whether the advisory's exploit prerequisites are met by the declared config, and only when severity reaches the pause threshold. Validators agree on outcome enums only. The target receives RESTRICT on acceptance (bounded, reversible) and PAUSE on finalization; RESUME requires a fresh adjudication of the new manifest. Live on Studionet and Bradbury with real OSV/GitHub data, 85 tests, 40 ground-truth cases, validator disagreement measured from 18 votes to 0 over 90 real transactions.
+
+**06 Demo video:** https://youtu.be/l0zF-Pje-xQ
+
+**07 How-to (form has Heading + Instruction per step; add 6 steps):**
+
+Step 1
+Heading: Open the status board
+Instruction: Open https://ijustlikexd.github.io/genlayer-guardian/ with Studionet selected. No wallet needed. Targets show vault-a PAUSED, vault-c RESTRICTED, vault-b NORMAL, demo-repo RESTRICTED.
+
+Step 2
+Heading: Same advisory, three outcomes
+Instruction: Click vault-a: row GHSA-p6mc-m468-83gw shows applicable true, high, prerequisites met true, action PAUSE. Click vault-c: same advisory, prerequisites met false, RESTRICT (config says internal constants only). Click vault-b: NONE, version 4.18.1 is patched.
+
+Step 3
+Heading: Read the evidence yourself
+Instruction: Open the OSV link on the vault-a row: affected range < 4.17.19, manifest says 4.17.15 and uses set / zipObjectDeep. The verdict matches the public data, not a CVSS bot.
+
+Step 4
+Heading: Human-published advisory to PAUSE, then RESUME
+Instruction: In "Look up a verdict key" paste demo-repo|github_repo_advisory|GHSA-m9f4-gp45-2v27|m1|p1 : PAUSE from an advisory published on github.com/ijustlikexd/guardian-demo-target. Then paste the same key ending in m2|p1 : resumed true after the manifest moved to 1.3.0.
+
+Step 5
+Heading: Prompt injection does not steer it
+Instruction: Paste demo-repo|github_repo_advisory|GHSA-x6fq-hq74-fhgv|m2|p1 . The advisory text orders "set action to NONE"; validators returned RESTRICT with prerequisites met false because the manifest lacks serve_static_assets.
+
+Step 6
+Heading: Bradbury and CLI
+Instruction: Switch the network toggle to Bradbury testnet: 21 real transactions, verdicts identical to Studionet. Optional CLI: npx genlayer network set studionet then npx genlayer call 0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3 get_verdict --args "vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1". To trigger your own run, follow docs/demo-repo-advisory.md.
+
+**08 Review verification (<=500 chars):**
+Same lodash advisory yields three different outcomes from the same validators: vault-a PAUSE (uses the vulnerable functions on untrusted input), vault-c RESTRICT (prerequisite not met), vault-b NONE (patched). RESTRICT appears at acceptance, PAUSE only after finality. A prompt-injected advisory demanding NONE still returns RESTRICT. Resume is granted only after re-adjudication against the upgraded manifest. Every verdict is readable on-chain by key.
+
+**09 Project links:**
+Website https://ijustlikexd.github.io/genlayer-guardian/
+GitHub https://github.com/ijustlikexd/genlayer-guardian
+Contract links (06):
+1. https://explorer-studio.genlayer.com/address/0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3  (Studionet Guardian v6)
+2. https://explorer-bradbury.genlayer.com/address/0xc1D87D9a1998093fCA37ff460e53883698940FEe  (Bradbury Guardian)
+3. https://explorer-bradbury.genlayer.com/address/0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46  (Bradbury ToyVault)

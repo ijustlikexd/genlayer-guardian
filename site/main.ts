@@ -387,6 +387,10 @@ function setupNetworkSwitcher(cfg: SiteConfig): void {
 // previously selected target belongs to the old network's target list).
 async function switchNetwork(networkKey: string): Promise<void> {
   if (!config || !config.networks[networkKey]) throw new Error(`Unknown network "${networkKey}"`);
+  $("status-banner").hidden = true;
+  if (networkKey === "studio-next") {
+    showBanner("Studio Next is an adjudication-only build: verdicts are stored on-chain, vault actions are not emitted because the preview has no contract-to-contract messages (docs/studio-next.md).");
+  }
   currentNetworkKey = networkKey;
   targetInfoCache.clear();
   selectedTargetId = null;

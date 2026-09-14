@@ -48,7 +48,21 @@ function assertExecuted(receipt, what) {
   };
   walk(receipt, 0);
   const real = errors.filter((e) => e !== "idle");
-  if (real.length) throw new Error(`${what} rolled back on-chain: ${real[0]}`);
+  if (real.length) {
+    // surface GenVM stderr/stdout for debugging runtime incompatibilities
+    const diag = []; const seen2 = new Set();
+    const walk2 = (node, depth) => {
+      if (!node || typeof node !== "object" || seen2.has(node) || depth > 10) return;
+      seen2.add(node);
+      for (const [k, v] of Object.entries(node)) {
+        if ((k === "stderr" || k === "stdout") && typeof v === "string" && v.trim()) diag.push(`${k}: ${v.slice(-1500)}`);
+        walk2(v, depth + 1);
+      }
+    };
+    walk2(receipt, 0);
+    if (process.env.NEXT_DEBUG) console.error(diag.join(" | --- | ") || JSON.stringify(receipt).slice(0, 3000));
+    throw new Error(`${what} rolled back on-chain: ${real[0]}`);
+  }
 }
 async function deploy(file) {
   const code = new Uint8Array(readFileSync(path.join(ROOT, file)));
@@ -76,11 +90,11 @@ async function cmdFund() {
 
 async function cmdDeployAll() {
   const spec = JSON.parse(readFileSync(path.join(ROOT, "docs/examples/deploy-spec.json"), "utf-8"));
-  const g = await deploy("contracts/Guardian.py");
+  const g = await deploy("contracts/next/Guardian.py");
   log("guardian_deployed", { address: g.address, tx_hash: g.txHash });
   const vaults = {};
   for (const t of spec.targets) {
-    const v = await deploy("contracts/ToyVault.py");
+    const v = await deploy("contracts/next/ToyVault.py");
     log("vault_deployed", { target_id: t.target_id, address: v.address, tx_hash: v.txHash });
     await write(v.address, "set_guardian", [g.address]);
     log("guardian_set", { target_id: t.target_id, vault_address: v.address });

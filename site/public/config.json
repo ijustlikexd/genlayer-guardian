@@ -43,8 +43,25 @@
     },
     "studio-next": {
       "chain": "studioNext",
-      "guardian": "",
-      "targets": []
+      "guardian": "0x06c8C109cC04EAeA26834e20b1150a7c56066288",
+      "targets": [
+        {
+          "id": "vault-a",
+          "vault": "0xa5C9382611B1fF3aECdBA33afED2535d37605D55"
+        },
+        {
+          "id": "vault-b",
+          "vault": "0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288"
+        },
+        {
+          "id": "vault-c",
+          "vault": "0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE"
+        },
+        {
+          "id": "demo-repo",
+          "vault": "0x40CD9f55d32C4F9626929Fed7DB7753B56E07458"
+        }
+      ]
     }
   },
   "repo_url": "https://github.com/ijustlikexd/genlayer-guardian"

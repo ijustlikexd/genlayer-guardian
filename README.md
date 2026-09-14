@@ -1,6 +1,6 @@
 # Guardian
 
-**Demo video (3:27):** https://youtu.be/l0zF-Pje-xQ · **Live site:** https://ijustlikexd.github.io/genlayer-guardian/
+**Demo video (3:27):** https://youtu.be/l0zF-Pje-xQ · **Live site:** https://ijustlikexd.github.io/genlayer-guardian/ · Deployed on Studionet, Bradbury testnet and Studio Next ([notes](docs/studio-next.md))
 
 **Protocols already know their dependencies. Guardian makes public security incidents enforceable against them.**
 

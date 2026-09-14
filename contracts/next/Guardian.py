@@ -1,5 +1,5 @@
 # v0.3.0
-# { "Depends": "py-genlayer:9b8kjyda2ycxyq4ea6g4yfpnydxhd52gqba5rb8dw7krkh5mn9p0" }
+# { "Depends": "py-genlayer:5jycge4q8k23462jtb0b9fyey1s9qz928sz2nbrd9mg4sxqg2qng" }
 """Guardian: dependency incident adjudication layer.
 
 A target protocol registers a Deployment Manifest (what it runs) and a Guardian Policy
@@ -17,6 +17,13 @@ import re
 from dataclasses import dataclass
 
 from genlayer import *
+import genlayer as gl
+TreeMap = gl.storage.TreeMap
+DynArray = gl.storage.DynArray
+allow_storage = gl.storage.allow
+Address = gl.Address
+u256 = gl.u256
+ENFORCEMENT_ENABLED = False  # Studio Next: adjudication-only build
 
 SOURCES = ("osv", "github_repo_advisory")
 SEVERITY_ORDER = {"none": 0, "low": 1, "moderate": 2, "high": 3, "critical": 4}
@@ -36,7 +43,7 @@ _ID_RE = re.compile(r"^[A-Za-z0-9._:-]{3,80}$")
 _REPO_RE = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?/(?!\.\.?$)[A-Za-z0-9_.-]+$")
 
 
-@gl.contract_interface
+@gl.contract.interface
 class Target:
     class View:
         def get_mode(self) -> str: ...
@@ -257,7 +264,7 @@ def _json_body(resp):
 # ----------------------------------------------------------------------- contract
 
 
-class Guardian(gl.Contract):
+class Guardian(gl.contract.Contract):
     owner: Address
     targets: TreeMap[str, TargetRecord]
     verdicts: TreeMap[str, VerdictRecord]
@@ -432,7 +439,7 @@ class Guardian(gl.Contract):
 
         # ---- finality-aware enforcement
         action = res["action"]
-        if action in ("RESTRICT", "PAUSE"):
+        if ENFORCEMENT_ENABLED and action in ("RESTRICT", "PAUSE"):
             target = Target(t.address)
             if ACTION_ORDER["RESTRICT"] <= ACTION_ORDER.get(policy["max_action_on_accepted"], 0):
                 target.emit(on="accepted").apply_action(incident_id, "RESTRICT")
@@ -494,7 +501,8 @@ class Guardian(gl.Contract):
         res = gl.vm.run_nondet(leader_fn, validator_fn)
         if not res["resume"]:
             raise gl.vm.UserError(f"Resume denied: {res['reason_code']}")
-        Target(t.address).emit(on="finalized").apply_action(incident_id, "RESUME")
+        if ENFORCEMENT_ENABLED:
+            Target(t.address).emit(on="finalized").apply_action(incident_id, "RESUME")
         v.resumed = True
         return res["reason_code"]
 
@@ -551,7 +559,8 @@ class Guardian(gl.Contract):
         for key, ok, reason in res:
             v = self.verdicts[key]
             if ok:
-                target.emit(on="finalized").apply_action(v.incident_id, "RESUME")
+                if ENFORCEMENT_ENABLED:
+                    target.emit(on="finalized").apply_action(v.incident_id, "RESUME")
                 v.resumed = True
                 resumed.append(v.incident_id)
             else:

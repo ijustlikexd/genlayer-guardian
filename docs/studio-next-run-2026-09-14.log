@@ -16,3 +16,184 @@ Error: Transaction reverted: EVM tx 0xbdaeb98ed1ae1db5170a3ac95f4cd3c3d8cda38740
 deploy contracts/Guardian.py rolled back on-chain: invalid_contract runner malformed
 == probe 1 2026-09-14T15:04:58Z
 deploy contracts/ToyVault.py rolled back on-chain: invalid_contract runner malformed
+== probe 2 2026-09-14T15:15:06Z
+deploy contracts/ToyVault.py rolled back on-chain: invalid_contract runner malformed
+== studio-next deploy-all (v0.3 contracts) 2026-09-14T15:15:30Z
+{"ts":"2026-09-14T15:15:42.286Z","event":"guardian_deployed","network":"studio-next","address":"0xF013aA052bBC1f04aCda67f26b152fee2B5D3c5f","tx_hash":"0x841894cb11d9c3543cf2bc9b4679c3c1486a3d7f2ea339de33d7d69a6f65e391"}
+{"ts":"2026-09-14T15:15:47.850Z","event":"vault_deployed","network":"studio-next","target_id":"vault-a","address":"0x05634f60ceCc4aF6D1b7195B946AB33b5786EaB2","tx_hash":"0x14746b8c83d4c1116173d174f2a8ffa26d810b9eb0b65f54dd42f4de88cfe815"}
+{"ts":"2026-09-14T15:15:56.815Z","event":"guardian_set","network":"studio-next","target_id":"vault-a","vault_address":"0x05634f60ceCc4aF6D1b7195B946AB33b5786EaB2"}
+{"ts":"2026-09-14T15:16:02.224Z","event":"target_registered","network":"studio-next","target_id":"vault-a","vault_address":"0x05634f60ceCc4aF6D1b7195B946AB33b5786EaB2","tx_hash":"0x293010e1f6e66cb8598fae63c7fe4dc30cd85bb96e9dc7e9adc0fca69babbb10"}
+{"ts":"2026-09-14T15:16:11.096Z","event":"vault_deployed","network":"studio-next","target_id":"vault-b","address":"0x9c4E31b9BC0f02e552C5538785cf5436b22e335a","tx_hash":"0x742cbc494f18fbd820866e2996d87c3f16b20ac5d3a68a230a47f1e29e266bb5"}
+{"ts":"2026-09-14T15:16:16.678Z","event":"guardian_set","network":"studio-next","target_id":"vault-b","vault_address":"0x9c4E31b9BC0f02e552C5538785cf5436b22e335a"}
+{"ts":"2026-09-14T15:16:25.477Z","event":"target_registered","network":"studio-next","target_id":"vault-b","vault_address":"0x9c4E31b9BC0f02e552C5538785cf5436b22e335a","tx_hash":"0x7f08c88cb9396ee648322275a2b7661501ce2cdcc86c95b933520f55220ccb6d"}
+{"ts":"2026-09-14T15:16:30.929Z","event":"vault_deployed","network":"studio-next","target_id":"vault-c","address":"0xe43eC02241CFd9E10c1DbfA2b8E1dCaDF4136eF3","tx_hash":"0x2890064c0c6467bac5444f1689f0522a7b9135a8893fc7de038989061122d5a1"}
+{"ts":"2026-09-14T15:16:36.359Z","event":"guardian_set","network":"studio-next","target_id":"vault-c","vault_address":"0xe43eC02241CFd9E10c1DbfA2b8E1dCaDF4136eF3"}
+{"ts":"2026-09-14T15:16:41.820Z","event":"target_registered","network":"studio-next","target_id":"vault-c","vault_address":"0xe43eC02241CFd9E10c1DbfA2b8E1dCaDF4136eF3","tx_hash":"0x01070332f9a6cf844798890b82ddc4067ac5f25f43f95bf90ff78d7468150f7d"}
+{"ts":"2026-09-14T15:16:47.340Z","event":"vault_deployed","network":"studio-next","target_id":"demo-repo","address":"0x0F8928EC9a7714ECdAdeB2F308cA0D2eD5814574","tx_hash":"0x8878b45871b73dd108a1d59d144eafbc98130ef40e42b58d4ac6056f0fdeefd3"}
+{"ts":"2026-09-14T15:16:56.092Z","event":"guardian_set","network":"studio-next","target_id":"demo-repo","vault_address":"0x0F8928EC9a7714ECdAdeB2F308cA0D2eD5814574"}
+{"ts":"2026-09-14T15:17:01.586Z","event":"target_registered","network":"studio-next","target_id":"demo-repo","vault_address":"0x0F8928EC9a7714ECdAdeB2F308cA0D2eD5814574","tx_hash":"0xc784cbe2fa12bba21d2a1ce24e7e9e844b7b61f7fd782b64b3a62e3d5ed790bd"}
+{
+  "network": "studio-next",
+  "guardian": "0xF013aA052bBC1f04aCda67f26b152fee2B5D3c5f",
+  "vaults": {
+    "vault-a": "0x05634f60ceCc4aF6D1b7195B946AB33b5786EaB2",
+    "vault-b": "0x9c4E31b9BC0f02e552C5538785cf5436b22e335a",
+    "vault-c": "0xe43eC02241CFd9E10c1DbfA2b8E1dCaDF4136eF3",
+    "demo-repo": "0x0F8928EC9a7714ECdAdeB2F308cA0D2eD5814574"
+  }
+}
+== check vault-a 2026-09-14T15:17:16Z
+check rolled back on-chain: exit_code 1
+== check vault-c 2026-09-14T15:17:29Z
+check rolled back on-chain: exit_code 1
+== check vault-b 2026-09-14T15:17:46Z
+{"ts":"2026-09-14T15:18:28.949Z","event":"check_submitted","network":"studio-next","target_id":"vault-b","source":"osv","incident_id":"GHSA-p6mc-m468-83gw","submit_time":"2026-09-14T15:17:48.066Z","accepted_time":"2026-09-14T15:18:28.949Z","tx_hash":"0x6556988ca9ddcfacdfac9a5d55e3cc99a89ca9f092e8a497a808e4fee9c28a25","verdict_key":"vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1"}
+{
+  "action": "NONE",
+  "applicable": false,
+  "attempts": 1,
+  "evidence": {
+    "affected_package": "npm:lodash",
+    "affected_range": "osv-query",
+    "deployed_version": "4.18.1",
+    "id": "GHSA-p6mc-m468-83gw",
+    "observed_at": "2026-09-14T15:17:50Z",
+    "published": "2020-07-15T19:15:48Z",
+    "source": "osv"
+  },
+  "incident_id": "GHSA-p6mc-m468-83gw",
+  "key": "vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1",
+  "manifest_version": 1,
+  "policy_version": 1,
+  "prerequisites_met": false,
+  "reason_code": "VERSION_NOT_AFFECTED",
+  "resolved_at": "2026-09-14T15:17:50Z",
+  "resumed": false,
+  "severity_bucket": "high",
+  "source": "osv",
+  "target_id": "vault-b"
+}
+{"ts":"2026-09-14T15:18:29.616Z","event":"check_finalized","network":"studio-next","target_id":"vault-b","verdict_key":"vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1","finalized_time":"2026-09-14T15:18:29.616Z"}
+== studio-next deploy-all (adjudication-only build) 2026-09-14T15:22:04Z
+{"ts":"2026-09-14T15:22:13.448Z","event":"guardian_deployed","network":"studio-next","address":"0x8B47bff74381F4D7dDA040B919e4acaED296932E","tx_hash":"0xb1776c39bb917cbefd7dfa2399fa9ef14cda28542810faea32794fb0e43ccb15"}
+GenLayer RPC error (sim_getFeeConfig): Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+An unknown RPC error occurred.
+
+Details: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+Version: viem@2.56.5
+== check vault-a 2026-09-14T15:22:15Z
+check rolled back on-chain: exit_code 1
+== check vault-c 2026-09-14T15:22:34Z
+check rolled back on-chain: exit_code 1
+== check vault-b 2026-09-14T15:22:59Z
+check rolled back on-chain: Already adjudicated
+== studio-next deploy-all retry (adjudication-only build) 2026-09-14T15:23:24Z
+{"ts":"2026-09-14T15:23:33.068Z","event":"guardian_deployed","network":"studio-next","address":"0x06c8C109cC04EAeA26834e20b1150a7c56066288","tx_hash":"0xd5712495f89a489c8bffe3cc8bb495b8322f109948aa0d7d4f7053367c093d8d"}
+{"ts":"2026-09-14T15:23:38.557Z","event":"vault_deployed","network":"studio-next","target_id":"vault-a","address":"0xa5C9382611B1fF3aECdBA33afED2535d37605D55","tx_hash":"0x4082cd2dc258c91ed5f818a142e48ce4afc4c4dd0025c1f53a0d1f29cf30f3e4"}
+{"ts":"2026-09-14T15:23:45.596Z","event":"guardian_set","network":"studio-next","target_id":"vault-a","vault_address":"0xa5C9382611B1fF3aECdBA33afED2535d37605D55"}
+{"ts":"2026-09-14T15:23:51.072Z","event":"target_registered","network":"studio-next","target_id":"vault-a","vault_address":"0xa5C9382611B1fF3aECdBA33afED2535d37605D55","tx_hash":"0x9369dd318e579d0d7a156cee871d8d34a5e66bdd50a96fd71cfa33b5ac31ac06"}
+{"ts":"2026-09-14T15:23:59.270Z","event":"vault_deployed","network":"studio-next","target_id":"vault-b","address":"0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288","tx_hash":"0x38ddacd33528c603f9a570a048b391c54674aa7d73a69262a7a81f3a0f3e674d"}
+{"ts":"2026-09-14T15:24:04.691Z","event":"guardian_set","network":"studio-next","target_id":"vault-b","vault_address":"0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288"}
+{"ts":"2026-09-14T15:24:10.343Z","event":"target_registered","network":"studio-next","target_id":"vault-b","vault_address":"0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288","tx_hash":"0xd195c81f6c0b7c3309674b262ffb7a2c434f9079fd221f82b03d0e1825ad6cf8"}
+{"ts":"2026-09-14T15:24:16.873Z","event":"vault_deployed","network":"studio-next","target_id":"vault-c","address":"0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE","tx_hash":"0xf39dbdd78c41d38addd479dcdb42e55db7d14168b933e5272accc2dbae4f3bf6"}
+{"ts":"2026-09-14T15:24:22.248Z","event":"guardian_set","network":"studio-next","target_id":"vault-c","vault_address":"0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE"}
+{"ts":"2026-09-14T15:24:26.915Z","event":"target_registered","network":"studio-next","target_id":"vault-c","vault_address":"0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE","tx_hash":"0xbfa6ef962ff4f9f604a682fb1b89524f23dd5317572b9e07651621c35f783f21"}
+{"ts":"2026-09-14T15:24:35.653Z","event":"vault_deployed","network":"studio-next","target_id":"demo-repo","address":"0x40CD9f55d32C4F9626929Fed7DB7753B56E07458","tx_hash":"0xa2738ceeb4c6c10da63173dd53a5a1b244b701d3f9ea39478541ebda8d41e80d"}
+{"ts":"2026-09-14T15:24:41.271Z","event":"guardian_set","network":"studio-next","target_id":"demo-repo","vault_address":"0x40CD9f55d32C4F9626929Fed7DB7753B56E07458"}
+{"ts":"2026-09-14T15:24:46.956Z","event":"target_registered","network":"studio-next","target_id":"demo-repo","vault_address":"0x40CD9f55d32C4F9626929Fed7DB7753B56E07458","tx_hash":"0x3d77172a5b654438a50511fcaab4e6688486f04b8507f0679c30492df09e62ea"}
+{
+  "network": "studio-next",
+  "guardian": "0x06c8C109cC04EAeA26834e20b1150a7c56066288",
+  "vaults": {
+    "vault-a": "0xa5C9382611B1fF3aECdBA33afED2535d37605D55",
+    "vault-b": "0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288",
+    "vault-c": "0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE",
+    "demo-repo": "0x40CD9f55d32C4F9626929Fed7DB7753B56E07458"
+  }
+}
+== check vault-a 2026-09-14T15:24:47Z
+== probe 3 2026-09-14T15:25:14Z
+deploy contracts/ToyVault.py rolled back on-chain: invalid_contract runner malformed
+{"ts":"2026-09-14T15:25:35.257Z","event":"check_submitted","network":"studio-next","target_id":"vault-a","source":"osv","incident_id":"GHSA-p6mc-m468-83gw","submit_time":"2026-09-14T15:24:48.309Z","accepted_time":"2026-09-14T15:25:35.257Z","tx_hash":"0x62cd83535ffe9df75f9481f9dcb937077a0a41a868b44638284cf861a4c44d9c","verdict_key":"vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1"}
+{
+  "action": "PAUSE",
+  "applicable": true,
+  "attempts": 1,
+  "evidence": {
+    "affected_package": "npm:lodash",
+    "affected_range": "osv-query",
+    "deployed_version": "4.17.15",
+    "id": "GHSA-p6mc-m468-83gw",
+    "observed_at": "2026-09-14T15:24:50Z",
+    "published": "2020-07-15T19:15:48Z",
+    "source": "osv"
+  },
+  "incident_id": "GHSA-p6mc-m468-83gw",
+  "key": "vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1",
+  "manifest_version": 1,
+  "policy_version": 1,
+  "prerequisites_met": true,
+  "reason_code": "VERSION_IN_RANGE_PREREQ_MET",
+  "resolved_at": "2026-09-14T15:24:50Z",
+  "resumed": false,
+  "severity_bucket": "high",
+  "source": "osv",
+  "target_id": "vault-a"
+}
+{"ts":"2026-09-14T15:25:37.833Z","event":"check_finalized","network":"studio-next","target_id":"vault-a","verdict_key":"vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1","finalized_time":"2026-09-14T15:25:37.833Z"}
+== check vault-c 2026-09-14T15:25:37Z
+{"ts":"2026-09-14T15:26:27.847Z","event":"check_submitted","network":"studio-next","target_id":"vault-c","source":"osv","incident_id":"GHSA-p6mc-m468-83gw","submit_time":"2026-09-14T15:25:39.055Z","accepted_time":"2026-09-14T15:26:27.847Z","tx_hash":"0xe08bbcefd09ccf02d875c46b43be8da67e28b6054af3b54c20dfa8f8656a4dbc","verdict_key":"vault-c|osv|GHSA-p6mc-m468-83gw|m1|p1"}
+{
+  "action": "RESTRICT",
+  "applicable": true,
+  "attempts": 1,
+  "evidence": {
+    "affected_package": "npm:lodash",
+    "affected_range": "osv-query",
+    "deployed_version": "4.17.15",
+    "id": "GHSA-p6mc-m468-83gw",
+    "observed_at": "2026-09-14T15:25:42Z",
+    "published": "2020-07-15T19:15:48Z",
+    "source": "osv"
+  },
+  "incident_id": "GHSA-p6mc-m468-83gw",
+  "key": "vault-c|osv|GHSA-p6mc-m468-83gw|m1|p1",
+  "manifest_version": 1,
+  "policy_version": 1,
+  "prerequisites_met": false,
+  "reason_code": "PREREQ_NOT_MET_DOWNGRADED",
+  "resolved_at": "2026-09-14T15:25:42Z",
+  "resumed": false,
+  "severity_bucket": "high",
+  "source": "osv",
+  "target_id": "vault-c"
+}
+{"ts":"2026-09-14T15:26:28.813Z","event":"check_finalized","network":"studio-next","target_id":"vault-c","verdict_key":"vault-c|osv|GHSA-p6mc-m468-83gw|m1|p1","finalized_time":"2026-09-14T15:26:28.813Z"}
+== check vault-b 2026-09-14T15:26:28Z
+{"ts":"2026-09-14T15:27:11.389Z","event":"check_submitted","network":"studio-next","target_id":"vault-b","source":"osv","incident_id":"GHSA-p6mc-m468-83gw","submit_time":"2026-09-14T15:26:30.042Z","accepted_time":"2026-09-14T15:27:11.389Z","tx_hash":"0x87417d39ec62941bd88f77755fb41869dbf302a3effecc9343655b47e6704374","verdict_key":"vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1"}
+{
+  "action": "NONE",
+  "applicable": false,
+  "attempts": 1,
+  "evidence": {
+    "affected_package": "npm:lodash",
+    "affected_range": "osv-query",
+    "deployed_version": "4.18.1",
+    "id": "GHSA-p6mc-m468-83gw",
+    "observed_at": "2026-09-14T15:26:32Z",
+    "published": "2020-07-15T19:15:48Z",
+    "source": "osv"
+  },
+  "incident_id": "GHSA-p6mc-m468-83gw",
+  "key": "vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1",
+  "manifest_version": 1,
+  "policy_version": 1,
+  "prerequisites_met": false,
+  "reason_code": "VERSION_NOT_AFFECTED",
+  "resolved_at": "2026-09-14T15:26:32Z",
+  "resumed": false,
+  "severity_bucket": "high",
+  "source": "osv",
+  "target_id": "vault-b"
+}
+{"ts":"2026-09-14T15:27:13.607Z","event":"check_finalized","network":"studio-next","target_id":"vault-b","verdict_key":"vault-b|osv|GHSA-p6mc-m468-83gw|m1|p1","finalized_time":"2026-09-14T15:27:13.607Z"}

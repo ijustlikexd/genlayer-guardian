@@ -10,6 +10,18 @@
       },
       "deployedAt": "2026-09-14T13:17:00.426Z",
       "signer": "env"
+    },
+    "studio-next": {
+      "guardian": "0x06c8C109cC04EAeA26834e20b1150a7c56066288",
+      "vaults": {
+        "vault-a": "0xa5C9382611B1fF3aECdBA33afED2535d37605D55",
+        "vault-b": "0x9d2bec3fe9a58FC57E87BFbc4e6d815ae0E65288",
+        "vault-c": "0xf38194bD23CE29CdbfC47f56a3aD2821F45489fE",
+        "demo-repo": "0x40CD9f55d32C4F9626929Fed7DB7753B56E07458"
+      },
+      "deployedAt": "2026-09-14T15:24:46.957Z",
+      "signer": "env",
+      "genlayerJs": "2.0.0-rc.1"
     }
   },
   "history": [

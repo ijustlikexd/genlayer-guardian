@@ -28,6 +28,7 @@ Guardian is an Intelligent Contract that adjudicates public security incidents a
 | Watch discovery | 6 lodash advisories found and adjudicated; only the one whose functions the manifest uses reached PAUSE | |
 | RESUME lifecycle | vault-a 6 incidents, vault-c, demo-repo | vault-a 6 incidents, finalized by the network |
 | Judge-triggerable path | publish an advisory on your own repo, 2.5 min publish-to-pause | |
+| Studio Next (chain 61997) | Guardian `0x06c8C109cC04EAeA26834e20b1150a7c56066288`, same three verdicts (PAUSE / RESTRICT / NONE) from Studio Next validators; adjudication-only because the preview has no contract-to-contract messages, see docs/studio-next.md | |
 
 Consistency, 5 identical targets x 6 incidents, 30 checks per version:
 

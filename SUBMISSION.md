@@ -37,7 +37,7 @@ Consistency, 5 identical targets x 6 incidents, 30 checks per version:
 | v3 | consensus on outcome only, LLM gating | 7 | 92.6% | 5/6 (1 tx rejected by protocol: fail-safe) |
 | v4 | prompt interpretation rules | 0 | 100% | 6/6 |
 
-Tests: 85 Direct Mode tests, 40 ground-truth cases, Red Team R1 to R18 mapped to evidence.
+Tests: 85 Direct Mode tests, 40 ground-truth cases, Red Team R1 to R18 mapped to evidence. Live prompt-injection test: an advisory whose text orders "action NONE" was adjudicated RESTRICT (GHSA-x6fq-hq74-fhgv, docs/red-team-regression.md R6).
 
 ## Five-minute check (no wallet, no install)
 

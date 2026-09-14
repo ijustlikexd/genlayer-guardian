@@ -32,7 +32,7 @@ Instruction: Open the OSV link on the vault-a row: affected range < 4.17.19, man
 
 Step 4
 Heading: Human-published advisory to PAUSE, then RESUME
-Instruction: In "Look up a verdict key" paste demo-repo|github_repo_advisory|GHSA-m9f4-gp45-2v27|m1|p1 : PAUSE from an advisory published on github.com/ijustlikexd/guardian-demo-target. Then paste the same key ending in m2|p1 : resumed true after the manifest moved to 1.3.0.
+Instruction: In "Look up a verdict key" paste demo-repo|github_repo_advisory|GHSA-m9f4-gp45-2v27|m1|p1 : action PAUSE from an advisory a human published on github.com/ijustlikexd/guardian-demo-target, and resumed true, granted only after the manifest moved to 1.3.0 and validators re-checked it.
 
 Step 5
 Heading: Prompt injection does not steer it

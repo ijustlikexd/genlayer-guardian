@@ -49,7 +49,7 @@ Same lodash advisory yields three different outcomes from the same validators: v
 Website https://ijustlikexd.github.io/genlayer-guardian/
 GitHub https://github.com/ijustlikexd/genlayer-guardian
 Contract links (06):
-1. https://explorer-studio-next.genlayer.com/address/0x06c8C109cC04EAeA26834e20b1150a7c56066288  (Studio Next Guardian, adjudication-only build, see docs/studio-next.md)
+1. https://explorer-studio-dev.genlayer.com/address/0x06c8C109cC04EAeA26834e20b1150a7c56066288  (Studio Next Guardian, adjudication-only build, see docs/studio-next.md)
 2. https://explorer-studio.genlayer.com/address/0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3  (Studionet Guardian v6)
 3. https://explorer-bradbury.genlayer.com/address/0xc1D87D9a1998093fCA37ff460e53883698940FEe  (Bradbury Guardian)
 4. https://explorer-bradbury.genlayer.com/address/0x91b97b374bc95c4bCAA1AF7fB56E0a50c24d5E46  (Bradbury ToyVault)

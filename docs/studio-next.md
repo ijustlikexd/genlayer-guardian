@@ -1,6 +1,6 @@
 # Guardian on GenLayer Studio Next (chain 61997)
 
-Studio Next (`https://studio-dev.genlayer.com/api`, GenVM v0.3.0-rc7, explorer `https://explorer-studio-next.genlayer.com`)
+Studio Next (`https://studio-dev.genlayer.com/api`, GenVM v0.3.0-rc7, explorer `https://explorer-studio-dev.genlayer.com` (the portal form calls this network "Studio Dev"))
 is the preview environment the Agent Tank form asks for. It differs from Studionet in three ways that matter here:
 
 | | Studionet / Bradbury | Studio Next |

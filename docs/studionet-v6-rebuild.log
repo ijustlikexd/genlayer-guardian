@@ -1,0 +1,34 @@
+== deploy-all studionet 21:15:10
+{"ts":"2026-09-14T13:15:38.147Z","event":"guardian_deployed","network":"studionet","address":"0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3","tx_hash":"0x32dc80a12b93f0888f48026fbdc3900dafbd2db9389be08f750fb2884c1a0989"}
+{"ts":"2026-09-14T13:15:43.441Z","event":"vault_deployed","network":"studionet","target_id":"vault-a","address":"0x26430F4d68Fa90eD43BAE770b1969fD9ea159331","tx_hash":"0x6e43272f521b91a62fcc8d00ffc47e38430563b022683700281a772fdd24c446"}
+{"ts":"2026-09-14T13:15:48.504Z","event":"guardian_set","network":"studionet","target_id":"vault-a","vault_address":"0x26430F4d68Fa90eD43BAE770b1969fD9ea159331"}
+{"ts":"2026-09-14T13:15:56.875Z","event":"target_registered","network":"studionet","target_id":"vault-a","vault_address":"0x26430F4d68Fa90eD43BAE770b1969fD9ea159331","tx_hash":"0x78519db2caa6aac044fa4885bc3336380c73b3b6306c17ab62d6da10f15b9292"}
+{"ts":"2026-09-14T13:16:05.598Z","event":"vault_deployed","network":"studionet","target_id":"vault-b","address":"0x80ea886b6CdFca43314cab67b045548411688C9e","tx_hash":"0x889a3421c3602b6ebd3522bd648f01bcd8a2fa4a9eebf2de501523e8a2bc55f2"}
+{"ts":"2026-09-14T13:16:10.714Z","event":"guardian_set","network":"studionet","target_id":"vault-b","vault_address":"0x80ea886b6CdFca43314cab67b045548411688C9e"}
+{"ts":"2026-09-14T13:16:19.093Z","event":"target_registered","network":"studionet","target_id":"vault-b","vault_address":"0x80ea886b6CdFca43314cab67b045548411688C9e","tx_hash":"0xcb2e150eb83e5a242db0890c444bf0f071458580cac9c6f75e3c8e0aee3dbf2a"}
+{"ts":"2026-09-14T13:16:24.699Z","event":"vault_deployed","network":"studionet","target_id":"vault-c","address":"0xBeFD4006B36ae725813eC6aB16d8cE9406164532","tx_hash":"0x0c50f9f773a14d615abc892b11c02b58623131a72d8d809dadaafd20499ab722"}
+{"ts":"2026-09-14T13:16:29.845Z","event":"guardian_set","network":"studionet","target_id":"vault-c","vault_address":"0xBeFD4006B36ae725813eC6aB16d8cE9406164532"}
+{"ts":"2026-09-14T13:16:38.462Z","event":"target_registered","network":"studionet","target_id":"vault-c","vault_address":"0xBeFD4006B36ae725813eC6aB16d8cE9406164532","tx_hash":"0xe0f95493f4a68ed18f47b7e85b0bd07cc74785f539ec1d2ad132a80e01ba1212"}
+{"ts":"2026-09-14T13:16:46.986Z","event":"vault_deployed","network":"studionet","target_id":"demo-repo","address":"0xa384ec13f522Aaa5171237416DFfEE6FcBe64E72","tx_hash":"0x347cee8dd14bd0b89d8f117ae75c5e3cfae1512b3fc2d41e8168d12aa68563ac"}
+{"ts":"2026-09-14T13:16:52.052Z","event":"guardian_set","network":"studionet","target_id":"demo-repo","vault_address":"0xa384ec13f522Aaa5171237416DFfEE6FcBe64E72"}
+{"ts":"2026-09-14T13:17:00.424Z","event":"target_registered","network":"studionet","target_id":"demo-repo","vault_address":"0xa384ec13f522Aaa5171237416DFfEE6FcBe64E72","tx_hash":"0x7d51da4c90592fac95d1a73eace32895d3be3304aaf67d6ce94e3fe677773b5d"}
+{"ts":"2026-09-14T13:17:00.428Z","event":"env_guardian_address_updated","network":"studionet","guardian_address":"0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3"}
+{
+  "network": "studionet",
+  "signer": "env",
+  "guardian": "0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3",
+  "vaults": {
+    "vault-a": "0x26430F4d68Fa90eD43BAE770b1969fD9ea159331",
+    "vault-b": "0x80ea886b6CdFca43314cab67b045548411688C9e",
+    "vault-c": "0xBeFD4006B36ae725813eC6aB16d8cE9406164532",
+    "demo-repo": "0xa384ec13f522Aaa5171237416DFfEE6FcBe64E72"
+  }
+}
+== demo video recording 2026-09-14 (all keeper commands real, recorded live by video/record.mjs)
+vault-a   osv GHSA-p6mc-m468-83gw -> PAUSE    (VERSION_IN_RANGE_PREREQ_MET)  vault RESTRICTED at accepted 13:27:35Z, PAUSED at finalized (~13:29:20Z)
+vault-c   osv GHSA-p6mc-m468-83gw -> RESTRICT (PREREQ_NOT_MET_DOWNGRADED)    vault RESTRICTED
+vault-b   osv GHSA-p6mc-m468-83gw -> NONE     (VERSION_NOT_AFFECTED)         vault NORMAL
+demo-repo github_repo_advisory GHSA-m9f4-gp45-2v27 --wait-final -> PAUSE (VERSION_IN_RANGE_PREREQ_MET) submitted 13:33:23Z accepted 13:33:41Z finalized ~13:34:11Z, vault PAUSED
+demo-repo update-manifest -> 1.3.0 (tx 0xd2b7b59ea9216479e7a04523cd0adf27784856b44b7f68da6a50d4e4f4db7d92)
+demo-repo resume-all -> resume_all_requested (tx 0xa5490f14a4c97e42ffa3531191e3ac42483d32bb0ab73f70609e3c24b222a30d), still_open [], vault NORMAL after finalization (~2 min)
+End state: vault-a PAUSED, vault-b NORMAL, vault-c RESTRICTED, demo-repo NORMAL (resolved GHSA-m9f4-gp45-2v27)

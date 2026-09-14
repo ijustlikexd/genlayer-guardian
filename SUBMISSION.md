@@ -21,7 +21,7 @@ Guardian is an Intelligent Contract that adjudicates public security incidents a
 
 | | Studionet | Bradbury |
 |---|---|---|
-| Guardian | `0x02d8b2dd887B774E9d518Fcb223d664E33cf4608` (v5, one vault per target; v4 `0xd6Ca…787F` holds the consistency runs) | `0xc1D87D9a1998093fCA37ff460e53883698940FEe` |
+| Guardian | `0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3` (v6, rebuilt 2026-09-14 for the demo video, one vault per target; v4 `0xd6Ca…787F` holds the consistency runs) | `0xc1D87D9a1998093fCA37ff460e53883698940FEe` |
 | Three scenarios (PAUSE / NONE / RESTRICT) | yes | yes, 21 real tx from the owner's wallet, verdicts identical to Studionet |
 | Watch discovery | 6 lodash advisories found and adjudicated; only the one whose functions the manifest uses reached PAUSE | |
 | RESUME lifecycle | vault-a 6 incidents, vault-c, demo-repo | vault-a 6 incidents, finalized by the network |
@@ -49,8 +49,8 @@ Tests: 85 Direct Mode tests, 40 ground-truth cases, Red Team R1 to R18 mapped to
 
 ```
 npx genlayer network set studionet
-npx genlayer call 0x02d8b2dd887B774E9d518Fcb223d664E33cf4608 get_target --args vault-a
-npx genlayer call 0x02d8b2dd887B774E9d518Fcb223d664E33cf4608 get_verdict --args "vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1"
+npx genlayer call 0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3 get_target --args vault-a
+npx genlayer call 0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3 get_verdict --args "vault-a|osv|GHSA-p6mc-m468-83gw|m1|p1"
 ```
 Then trigger your own: publish an advisory on a repo you own, register a target bound to it, `keeper check`, watch the vault flip. Steps in docs/demo-repo-advisory.md.
 

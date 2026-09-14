@@ -6,3 +6,6 @@ dist
 site/dist
 deployments.local.json
 keeper/pending-finalize.json
+video/node_modules/
+video/out/
+.claude/

@@ -41,3 +41,17 @@ Screen recording, no face. Voice-over lines in quotes; on-screen actions in brac
 - vault-a, vault-c, vault-b unadjudicated for p6mc before recording; demo-repo unadjudicated for m9f4 (register a new target id if needed).
 - Site open in a second window with network = Studionet; refresh after each accepted tx.
 - Terminal font large; `--wait-final` only on the demo-repo step.
+
+## How the video was produced (reproducible)
+
+`video/` holds the tooling: `stage/stage.html` (slides, terminal panel, same-origin iframe of the status site),
+`record.mjs` (Playwright on the Edge channel; runs every keeper command for real against Studionet while recording,
+writes `out/clips.json` with the segments to keep so idle waiting is cut), and `build.py` (Edge TTS narration,
+ffmpeg trim/concat, `out/guardian-demo.mp4`). Nothing in the video is mocked: terminal output is the keeper's stdout,
+the right pane is the live site reading the v6 contracts.
+
+```
+cd guardian && npx vite build site && npx vite preview site --port 4173 --strictPort   # site + stage on :4173
+cp -r video/stage site/dist/stage
+cd video && npm i && node record.mjs && PYTHONUTF8=1 python build.py
+```

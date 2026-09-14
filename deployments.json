@@ -1,14 +1,14 @@
 {
   "current": {
     "studionet": {
-      "guardian": "0x02d8b2dd887B774E9d518Fcb223d664E33cf4608",
+      "guardian": "0x022dA1B1384Fc5580Cde27D00E18d85B137cc5c3",
       "vaults": {
-        "vault-a": "0x8A5d254134370f4a6BF8bDDa9c7641179d1Bb6A9",
-        "vault-b": "0x0A43d9217aB51103841d13977222bCa214b63938",
-        "vault-c": "0x9Ca3FAB09aB3Fbdf9FCafd9205dFC333f0f39083",
-        "demo-repo": "0xd66234a30138E48Dd14ae6D512c467b3BF219122"
+        "vault-a": "0x26430F4d68Fa90eD43BAE770b1969fD9ea159331",
+        "vault-b": "0x80ea886b6CdFca43314cab67b045548411688C9e",
+        "vault-c": "0xBeFD4006B36ae725813eC6aB16d8cE9406164532",
+        "demo-repo": "0xa384ec13f522Aaa5171237416DFfEE6FcBe64E72"
       },
-      "deployedAt": "2026-09-04T19:06:46.172Z",
+      "deployedAt": "2026-09-14T13:17:00.426Z",
       "signer": "env"
     }
   },

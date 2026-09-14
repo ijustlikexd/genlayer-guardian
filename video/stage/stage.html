@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Guardian demo stage</title>
+<style>
+  :root {
+    --bg: #0f1412; --panel: #151b18; --text: #e8ece9; --muted: #9aa39d; --accent: #4fb883;
+    --restricted: #d9a521; --paused: #e0574b; --normal: #4fb883; --border: #263029;
+    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--text); }
+  .scene { position: absolute; inset: 0; display: none; }
+  .scene:not(.active) { display: none !important; }
+  .scene.active { display: block; }
+  .scene.active.slide { display: flex; }
+
+  /* ---------- slides ---------- */
+  .slide { display: flex; flex-direction: column; justify-content: center; padding: 120px 160px; box-sizing: border-box; height: 100%; }
+  .slide h1 { font-size: 78px; margin: 0 0 32px; line-height: 1.1; letter-spacing: -0.01em; }
+  .slide h2 { font-size: 44px; margin: 0 0 24px; color: var(--muted); font-weight: 500; }
+  .slide p.big { font-size: 40px; line-height: 1.35; color: var(--text); margin: 0; max-width: 1500px; }
+  .kicker { color: var(--accent); font-size: 28px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 28px; font-weight: 600; }
+  .two { display: flex; gap: 80px; margin-top: 56px; align-items: stretch; }
+  .card { flex: 1; background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 40px 48px; }
+  .card h3 { margin: 0 0 18px; font-size: 34px; }
+  .card p { margin: 0; font-size: 28px; color: var(--muted); line-height: 1.4; }
+  .card .bad { color: var(--paused); font-weight: 600; }
+  .flow { display: flex; align-items: center; gap: 36px; margin-top: 60px; }
+  .flow .box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px 34px; font-size: 26px; min-width: 380px; }
+  .flow .box .t { color: var(--muted); font-size: 20px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .flow .box code { font-family: Consolas, "Cascadia Mono", monospace; font-size: 22px; color: var(--text); white-space: pre; display: block; line-height: 1.45; }
+  .flow .arrow { font-size: 60px; color: var(--muted); }
+  .outcomes { display: flex; flex-direction: column; gap: 18px; }
+  .pill { border-radius: 999px; padding: 14px 30px; font-weight: 700; font-size: 28px; color: #0f1412; text-align: center; white-space: nowrap; min-width: 300px; }
+  .pill.none { background: var(--normal); } .pill.restrict { background: var(--restricted); } .pill.pause { background: var(--paused); }
+  .foot { position: absolute; bottom: 48px; left: 160px; right: 160px; display: flex; justify-content: space-between; color: var(--muted); font-size: 24px; }
+  .stats { display: flex; gap: 60px; margin-top: 60px; }
+  .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 18px; padding: 36px 44px; flex: 1; }
+  .stat .n { font-size: 84px; font-weight: 700; color: var(--accent); line-height: 1; }
+  .stat .l { font-size: 26px; color: var(--muted); margin-top: 14px; }
+
+  /* ---------- split ---------- */
+  .split { display: grid; grid-template-columns: 820px 1fr; height: 100%; }
+  .term { background: #0b0f0d; border-right: 1px solid var(--border); padding: 28px 32px; box-sizing: border-box; font-family: Consolas, "Cascadia Mono", "Courier New", monospace; font-size: 21px; line-height: 1.42; overflow: hidden; display: flex; flex-direction: column; }
+  .term .bar { color: var(--muted); font-size: 17px; margin-bottom: 18px; display: flex; gap: 10px; align-items: center; }
+  .term .bar i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; background: #3a453f; }
+  .term .body { flex: 1; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; white-space: pre-wrap; word-break: break-all; }
+  .term .cmd { color: #fff; } .term .cmd::before { content: "keeper $ "; color: var(--accent); }
+  .term .out { color: #b9c2bc; }
+  .term .hl-pause { color: var(--paused); font-weight: 700; } .term .hl-restrict { color: var(--restricted); font-weight: 700; } .term .hl-none { color: var(--normal); font-weight: 700; }
+  .term .cursor { display: inline-block; width: 11px; height: 24px; background: #fff; vertical-align: -4px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .right { position: relative; background: #f7f7f5; }
+  .right iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .right img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 40px; font-size: 30px; background: rgba(15,20,18,0.92); color: var(--text); border-top: 1px solid var(--border); display: none; }
+  .caption.show { display: block; }
+  .caption b { color: var(--accent); }
+
+  /* ---------- full site ---------- */
+  .full iframe { width: 1920px; height: 1080px; border: 0; display: block; }
+</style>
+</head>
+<body>
+
+<!-- S1 problem -->
+<section class="scene slide" id="s-problem">
+  <div class="kicker">GenLayer Agent Tank 2026 · Autonomous Protocols</div>
+  <h1>Who is allowed to pause a protocol?</h1>
+  <div class="two">
+    <div class="card"><h3>An admin key</h3><p>A few people, a multisig, a phone call at 3 am.<br><span class="bad">Trust the humans.</span></p></div>
+    <div class="card"><h3>A bot on a CVSS score</h3><p>Pauses on every "High", including bugs this deployment never exposed.<br><span class="bad">Trust the number.</span></p></div>
+  </div>
+  <div class="foot"><span>Guardian · Dependency Incident Adjudication Layer</span><span>github.com/ijustlikexd/genlayer-guardian</span></div>
+</section>
+
+<!-- S2 what it judges -->
+<section class="scene slide" id="s-judge">
+  <div class="kicker">What Guardian judges</div>
+  <h1>Does this incident apply to <em>this</em> deployment?</h1>
+  <div class="flow">
+    <div class="box"><div class="t">Protocol declares (on-chain)</div><code>lodash@4.17.15
+accepts_external_json_merge: true
+uses_functions: [merge, set, zipObjectDeep]
+policy: pause ≥ high, prereq required</code></div>
+    <div class="arrow">+</div>
+    <div class="box"><div class="t">Public advisory (fetched by every validator)</div><code>GHSA-p6mc-m468-83gw
+lodash prototype pollution
+affected &lt; 4.17.19 · HIGH
+via set / zipObjectDeep</code></div>
+    <div class="arrow">→</div>
+    <div class="outcomes"><div class="pill none">NONE</div><div class="pill restrict">RESTRICT @ accepted</div><div class="pill pause">PAUSE @ finalized</div></div>
+  </div>
+  <div class="foot"><span>Deterministic first: version range, CVSS vector. LLM asked one boolean, only when it matters.</span><span>Validators agree on outcome enums, never on prose.</span></div>
+</section>
+
+<!-- S3 split -->
+<section class="scene" id="s-split">
+  <div class="split">
+    <div class="term">
+      <div class="bar"><i></i><i></i><i></i>&nbsp; keeper · Studionet · Guardian 0x022dA1…cc5c3</div>
+      <div class="body" id="term-body"></div>
+    </div>
+    <div class="right">
+      <iframe id="site" src="about:blank"></iframe>
+      <img id="shot" alt="" style="display:none" />
+      <div class="caption" id="caption"></div>
+    </div>
+  </div>
+</section>
+
+<!-- S4 full site -->
+<section class="scene full" id="s-full">
+  <iframe id="site-full" src="about:blank"></iframe>
+</section>
+
+<!-- S5 numbers -->
+<section class="scene slide" id="s-numbers">
+  <div class="kicker">Validator consistency · 5 identical targets × 6 advisories × 3 versions</div>
+  <h1>Disagreement engineered to zero</h1>
+  <div class="stats">
+    <div class="stat"><div class="n">18 → 0</div><div class="l">DISAGREE votes, v2 → v4<br>(consensus on outcome enums, LLM gated, prompt rules)</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">AGREE share on v4, 6 of 6 incidents stable</div></div>
+    <div class="stat"><div class="n">85</div><div class="l">Direct Mode tests · 40 ground-truth cases · Red Team R1–R18</div></div>
+  </div>
+  <div class="foot"><span>Real OSV and GitHub data, real validator LLMs, every run logged in docs/</span><span></span></div>
+</section>
+
+<!-- S6 close -->
+<section class="scene slide" id="s-close">
+  <div class="kicker">Live on Bradbury testnet · 21 real transactions from the owner's wallet</div>
+  <h1>A deployed contract, a keeper anyone can run, a policy the protocol owns.</h1>
+  <p class="big">No admin key decides. No CVSS bot decides. Validators adjudicate public evidence against what the protocol declared, and finality decides how hard to act.</p>
+  <div class="foot"><span>ijustlikexd.github.io/genlayer-guardian</span><span>Guardian · Autonomous Protocols track</span></div>
+</section>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const body = $("term-body");
+
+  function show(id) {
+    document.querySelectorAll(".scene").forEach((s) => s.classList.toggle("active", s.id === id));
+  }
+  function colorize(text) {
+    return text
+      .replace(/"PAUSE"/g, '<span class="hl-pause">"PAUSE"</span>')
+      .replace(/"RESTRICT"/g, '<span class="hl-restrict">"RESTRICT"</span>')
+      .replace(/"NONE"/g, '<span class="hl-none">"NONE"</span>')
+      .replace(/"prerequisites_met": (true|false)/g, (m, v) => `"prerequisites_met": <span class="${v === "true" ? "hl-pause" : "hl-restrict"}">${v}</span>`)
+      .replace(/"applicable": (true|false)/g, (m, v) => `"applicable": <span class="${v === "true" ? "hl-pause" : "hl-none"}">${v}</span>`);
+  }
+  async function typeCmd(cmd, cps = 28) {
+    const el = document.createElement("div"); el.className = "cmd";
+    const cur = document.createElement("span"); cur.className = "cursor";
+    body.appendChild(el); el.appendChild(cur);
+    for (const ch of cmd) { cur.insertAdjacentText("beforebegin", ch); await sleep(1000 / cps); }
+    await sleep(350); cur.remove();
+  }
+  function out(line) {
+    const el = document.createElement("div"); el.className = "out"; el.innerHTML = colorize(line.replace(/</g, "&lt;"));
+    body.appendChild(el);
+    while (body.children.length > 60) body.removeChild(body.firstChild);
+  }
+  function clearTerm() { body.innerHTML = ""; }
+  function caption(html) { const c = $("caption"); if (!html) { c.classList.remove("show"); return; } c.innerHTML = html; c.classList.add("show"); }
+  function siteFrame() { return document.querySelector(".scene.active iframe"); }
+  async function loadSite(url, zoom) {
+    const f = siteFrame();
+    await new Promise((res) => { f.onload = () => res(); f.src = url; });
+    const d = f.contentDocument;
+    if (zoom) d.body.style.zoom = String(zoom);
+    return d;
+  }
+  function siteDoc() { return siteFrame().contentDocument; }
+  async function waitFor(fn, timeoutMs = 60000) {
+    const t0 = Date.now();
+    while (Date.now() - t0 < timeoutMs) { try { const v = fn(siteDoc()); if (v) return v; } catch {} await sleep(250); }
+    return null;
+  }
+  function showShot(src) { $("site").style.display = "none"; const i = $("shot"); i.src = src; i.style.display = "block"; }
+  function showSite() { $("shot").style.display = "none"; $("site").style.display = "block"; }
+  window.stage = { show, typeCmd, out, clearTerm, caption, loadSite, siteDoc, waitFor, showShot, showSite, sleep };
+</script>
+</body>
+</html>

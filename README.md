@@ -1,5 +1,7 @@
 # Guardian
 
+**Demo video (3:27):** https://youtu.be/l0zF-Pje-xQ · **Live site:** https://ijustlikexd.github.io/genlayer-guardian/
+
 **Protocols already know their dependencies. Guardian makes public security incidents enforceable against them.**
 
 Agent Tank 2026, Track: Autonomous Protocols.

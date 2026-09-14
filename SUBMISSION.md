@@ -1,5 +1,7 @@
 # Guardian, in one page
 
+**Demo video (3:27):** https://youtu.be/l0zF-Pje-xQ
+
 **Track:** Autonomous Protocols (contracts that govern other contracts' emergency posture from public evidence, with no admin key).
 
 **One-liner (180 chars):**
